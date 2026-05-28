@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface2: #222;
+  --border: #2a2a2a;
+  --border2: #333;
+  --text: #e8e8e0;
+  --muted: #666;
+  --dim: #444;
+  --none-bg: #2a1010;
+  --none-border: #7a1f1f;
+  --none-text: #f09595;
+  --half-bg: #1e1600;
+  --half-border: #7a5500;
+  --half-text: #FAC775;
+  --done-bg: #0d1f06;
+  --done-border: #3B6D11;
+  --done-text: #97C459;
+  --accent: #97C459;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.container { max-width: 560px; margin: 0 auto; }
+
+header {
+  margin-bottom: 2.5rem;
+}
+
+h1 {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.week-display {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.week-nav-btn {
+  background: none;
+  border: 0.5px solid var(--border2);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+}
+.week-nav-btn:hover { border-color: var(--dim); color: var(--text); }
+
+.urgency {
+  margin-top: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .04em;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border-left: 2px solid;
+}
+.u-ok { background: var(--done-bg); border-color: var(--done-border); color: var(--done-text); }
+.u-warn { background: var(--half-bg); border-color: var(--half-border); color: var(--half-text); }
+.u-crit { background: var(--none-bg); border-color: var(--none-border); color: var(--none-text); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 1.5rem 0;
+}
+
+.stat {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.stat-label { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+.stat-val { font-size: 24px; font-weight: 500; margin-top: 2px; }
+.stat-val.none-color { color: var(--none-text); }
+.stat-val.half-color { color: var(--half-text); }
+.stat-val.done-color { color: var(--done-text); }
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
+
+.chip {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 0.5px solid;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  transition: transform .1s, opacity .1s;
+}
+.chip:active { transform: scale(0.96); }
+.chip-none { background: var(--none-bg); border-color: var(--none-border); color: var(--none-text); }
+.chip-half { background: var(--half-bg); border-color: var(--half-border); color: var(--half-text); }
+.chip-done { background: var(--done-bg); border-color: var(--done-border); color: var(--done-text); }
+.chip-pool { background: var(--surface); border-color: var(--border2); color: var(--text); }
+.chip-pool:hover { border-color: var(--dim); }
+
+.badge {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  background: rgba(255,255,255,.07);
+  border-radius: 20px;
+  padding: 1px 6px;
+}
+
+.divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
+
+.tabs {
+  display: flex;
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.tab.active { background: var(--surface2); color: var(--text); font-weight: 500; }
+.tab:hover:not(.active) { color: var(--text); }
+
+.add-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.add-row input {
+  flex: 1; min-width: 160px;
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  outline: none;
+}
+.add-row input:focus { border-color: var(--dim); }
+.add-row input::placeholder { color: var(--muted); }
+.add-row button, .btn {
+  background: none;
+  border: 0.5px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: .03em;
+}
+.add-row button:hover, .btn:hover { border-color: var(--dim); }
+
+.sync-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--done-border); flex-shrink: 0; }
+.sdot.err { background: var(--none-border); }
+.sdot.loading { background: var(--half-border); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.leg {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'DM Mono', monospace;
+}
+.leg-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.help-text { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; letter-spacing: .02em; }
+
+.config-box {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 1.5rem;
+}
+.config-box p { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.6; }
+.config-box a { color: var(--half-text); }
+.config-input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.config-input-row input {
+  flex: 1; min-width: 200px;
+  background: var(--bg);
+  border: 0.5px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  outline: none;
+}
+.config-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+
+.empty { font-size: 13px; color: var(--muted); padding: 6px 0; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Workout Tracker</h1>
+    <div class="week-display">
+      <button class="week-nav-btn" onclick="cw(-1)">←</button>
+      <span id="wlabel"></span>
+      <button class="week-nav-btn" onclick="cw(1)">→</button>
+    </div>
+    <div id="urgency-msg"></div>
+  </header>
+
+  <div class="sync-bar">
+    <span class="sdot" id="sdot"></span>
+    <span id="smsg">Initialisiere...</span>
+    <button class="btn" style="margin-left:auto;padding:3px 10px;font-size:10px" onclick="syncNow()">↻ Sync</button>
+    <button class="btn" style="padding:3px 10px;font-size:10px" onclick="setTab('settings')">⚙</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('week')">Diese Woche</button>
+    <button class="tab" onclick="setTab('pool')">Übungspool</button>
+  </div>
+
+  <!-- WEEK VIEW -->
+  <div id="view-week">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Fehlt</div><div class="stat-val none-color" id="s-none">0</div></div>
+      <div class="stat"><div class="stat-label">Halb</div><div class="stat-val half-color" id="s-half">0</div></div>
+      <div class="stat"><div class="stat-label">Fertig</div><div class="stat-val done-color" id="s-done">0</div></div>
+    </div>
+    <div class="legend">
+      <span class="leg"><span class="leg-dot" style="background:var(--none-border)"></span>0× gemacht</span>
+      <span class="leg"><span class="leg-dot" style="background:var(--half-border)"></span>1× gemacht</span>
+      <span class="leg"><span class="leg-dot" style="background:var(--done-border)"></span>2× erledigt</span>
+    </div>
+    <div class="section-label">Klick = 1× · nochmal = 2× · nochmal = zurücksetzen</div>
+    <div class="chips" id="week-chips" style="margin-top:8px"></div>
+    <div class="empty" id="week-empty" style="display:none">Noch keine Übungen. Füge welche im Tab "Übungspool" hinzu.</div>
+  </div>
+
+  <!-- POOL VIEW -->
+  <div id="view-pool" style="display:none">
+    <div class="section-label">Dein Übungspool</div>
+    <div class="chips" id="pool-chips" style="margin-top:8px"></div>
+    <div class="empty" id="pool-empty" style="display:none">Noch leer.</div>
+    <div class="add-row">
+      <input type="text" id="pool-input" placeholder="z.B. Kniebeugen" maxlength="40" onkeydown="if(event.key==='Enter')addToPool()">
+      <button onclick="addToPool()">+ Hinzufügen</button>
+    </div>
+    <p class="help-text">Rechtsklick auf eine Übung = löschen</p>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div id="view-settings" style="display:none">
+    <div class="config-box">
+      <div class="config-label">Google OAuth Client-ID</div>
+      <p>Damit deine Daten geräteübergreifend in Google Drive gespeichert werden, gibst du hier deine Client-ID ein. <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console →</a></p>
+      <div class="config-input-row">
+        <input type="text" id="client-id-input" placeholder="xxxxxxxx.apps.googleusercontent.com">
+        <button onclick="saveClientId()">Speichern</button>
+      </div>
+    </div>
+    <div class="config-box">
+      <div class="config-label">Drive-Status</div>
+      <p id="settings-status" style="margin:0;font-size:13px;color:var(--muted)">Nicht verbunden.</p>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" onclick="signIn()">Mit Google anmelden</button>
+        <button class="btn" onclick="signOut()">Abmelden</button>
+      </div>
+    </div>
+    <div class="config-box">
+      <div class="config-label">Daten exportieren</div>
+      <p>Backup als JSON-Datei herunterladen.</p>
+      <button class="btn" onclick="exportData()">↓ Export</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+const FILE_NAME = 'workout_tracker_data.json';
+let state = { pool: [], weeks: {} };
+let fileId = null;
+let wo = 0;
+let gapiReady = false;
+let signedIn = false;
+let saveTimer = null;
+
+// ── Config ──────────────────────────────────────────────────
+function getClientId() { return localStorage.getItem('wt_client_id') || ''; }
+function saveClientId() {
+  const v = document.getElementById('client-id-input').value.trim();
+  if (!v) return;
+  localStorage.setItem('wt_client_id', v);
+  setSyncStatus('loading', 'Client-ID gespeichert – lade Google API...');
+  initGapi();
+}
+
+// ── GAPI ────────────────────────────────────────────────────
+function initGapi() {
+  const cid = getClientId();
+  if (!cid) { setSyncStatus('err', 'Keine Client-ID – bitte in Einstellungen eintragen'); return; }
+  gapi.load('client:auth2', async () => {
+    try {
+      await gapi.client.init({
+        clientId: cid,
+        scope: 'https://www.googleapis.com/auth/drive.file',
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+      });
+      gapiReady = true;
+      const auth = gapi.auth2.getAuthInstance();
+      signedIn = auth.isSignedIn.get();
+      auth.isSignedIn.listen(s => { signedIn = s; onSignInChange(s); });
+      if (signedIn) { await loadData(); }
+      else { setSyncStatus('err', 'Nicht angemeldet – bitte in Einstellungen anmelden'); }
+      updateSettingsStatus();
+    } catch(e) { setSyncStatus('err', 'GAPI Fehler: ' + e.message); }
+  });
+}
+
+function onSignInChange(s) {
+  signedIn = s;
+  updateSettingsStatus();
+  if (s) loadData();
+  else setSyncStatus('err', 'Abgemeldet');
+}
+
+function signIn() { if (gapiReady) gapi.auth2.getAuthInstance().signIn(); }
+function signOut() { if (gapiReady) gapi.auth2.getAuthInstance().signOut(); }
+
+function updateSettingsStatus() {
+  const el = document.getElementById('settings-status');
+  if (!getClientId()) { el.textContent = 'Keine Client-ID eingetragen.'; return; }
+  if (!gapiReady) { el.textContent = 'API wird geladen...'; return; }
+  if (signedIn) {
+    const user = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile();
+    el.textContent = 'Angemeldet als: ' + user.getEmail();
+  } else { el.textContent = 'Nicht angemeldet.'; }
+}
+
+// ── Drive ───────────────────────────────────────────────────
+async function findOrCreateFile() {
+  const res = await gapi.client.drive.files.list({ q: `name='${FILE_NAME}' and trashed=false`, fields: 'files(id)', spaces: 'drive' });
+  const files = res.result.files;
+  if (files && files.length > 0) { fileId = files[0].id; return; }
+  const r = await gapi.client.request({ path: '/upload/drive/v3/files', method: 'POST', params: { uploadType: 'multipart', fields: 'id' }, headers: { 'Content-Type': 'multipart/related; boundary=wt_b' }, body: `--wt_b\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({ name: FILE_NAME, mimeType: 'application/json' })}\r\n--wt_b\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(state)}\r\n--wt_b--` });
+  fileId = r.result.id;
+}
+
+async function loadData() {
+  setSyncStatus('loading', 'Lade Daten...');
+  try {
+    await findOrCreateFile();
+    const r = await gapi.client.drive.files.get({ fileId, alt: 'media' });
+    const parsed = typeof r.result === 'string' ? JSON.parse(r.result) : r.result;
+    if (parsed && parsed.pool) state = parsed;
+    setSyncStatus('ok', 'Verbunden mit Google Drive');
+    render();
+  } catch(e) { setSyncStatus('err', 'Ladefehler: ' + e.message); }
+}
+
+async function saveToDrive() {
+  if (!fileId || !signedIn) return;
+  await gapi.client.request({ path: `/upload/drive/v3/files/${fileId}`, method: 'PATCH', params: { uploadType: 'media' }, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state) });
+}
+
+async function syncNow() {
+  if (!signedIn) { setSyncStatus('err', 'Nicht angemeldet'); return; }
+  setSyncStatus('loading', 'Synchronisiere...');
+  try { await loadData(); setSyncStatus('ok', 'Synchronisiert ✓'); }
+  catch(e) { setSyncStatus('err', 'Sync fehlgeschlagen'); }
+}
+
+function scheduleSave() {
+  try { localStorage.setItem('wt_local', JSON.stringify(state)); } catch(e) {}
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    if (!signedIn) return;
+    setSyncStatus('loading', 'Speichere...');
+    try { await saveToDrive(); setSyncStatus('ok', 'Gespeichert ✓'); }
+    catch(e) { setSyncStatus('err', 'Speichern fehlgeschlagen'); }
+  }, 800);
+}
+
+function setSyncStatus(status, msg) {
+  const dot = document.getElementById('sdot');
+  const sm = document.getElementById('smsg');
+  dot.className = 'sdot' + (status === 'err' ? ' err' : status === 'loading' ? ' loading' : '');
+  sm.textContent = msg;
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'workout_backup.json'; a.click();
+}
+
+// ── State ───────────────────────────────────────────────────
+function wk(o) {
+  const d = new Date(); const day = d.getDay();
+  const diff = d.getDate() - (day === 0 ? 6 : day - 1);
+  d.setDate(diff + o * 7); d.setHours(0,0,0,0);
+  return d.toISOString().slice(0,10);
+}
+function wLabel(o) {
+  const m = new Date(wk(o)); const e = new Date(m); e.setDate(m.getDate() + 6);
+  const f = d => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+  if (o === 0) return `${f(m)} – ${f(e)}`;
+  if (o === -1) return `Letzte Woche`;
+  if (o === 1) return `Nächste Woche`;
+  return `${f(m)} – ${f(e)}`;
+}
+function getWC() { const k = wk(wo); if (!state.weeks[k]) state.weeks[k] = {}; return state.weeks[k]; }
+function daysLeft() { const d = new Date().getDay(); return d === 0 ? 0 : 7 - d; }
+
+function cycleEx(name) { const wc = getWC(); wc[name] = ((wc[name] || 0) + 1) % 3; scheduleSave(); render(); }
+function addToPool() {
+  const inp = document.getElementById('pool-input'); const n = inp.value.trim();
+  if (!n || state.pool.includes(n)) return;
+  state.pool.push(n); inp.value = ''; scheduleSave(); render();
+}
+function removeFromPool(name) { state.pool = state.pool.filter(p => p !== name); scheduleSave(); render(); }
+function cw(d) { wo += d; render(); }
+
+function setTab(t) {
+  ['week','pool','settings'].forEach(id => {
+    document.getElementById('view-' + id).style.display = id === t ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && t === 'week') || (i === 1 && t === 'pool'));
+  });
+  if (t === 'settings') {
+    const ci = document.getElementById('client-id-input');
+    if (ci) ci.value = getClientId();
+    updateSettingsStatus();
+  }
+}
+
+// ── Render ──────────────────────────────────────────────────
+function render() {
+  document.getElementById('wlabel').textContent = wLabel(wo);
+  const wc = getWC(); const pool = state.pool;
+  let done = 0, half = 0, none = 0;
+  pool.forEach(n => { const c = wc[n] || 0; if (c >= 2) done++; else if (c === 1) half++; else none++; });
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-half').textContent = half;
+  document.getElementById('s-none').textContent = none;
+
+  const um = document.getElementById('urgency-msg');
+  if (pool.length > 0 && wo === 0) {
+    const left = daysLeft(); const missing = none + half;
+    if (missing === 0) um.innerHTML = `<div class="urgency u-ok">alle übungen diese woche erledigt.</div>`;
+    else if (left <= 1) um.innerHTML = `<div class="urgency u-crit">woche endet bald — noch ${missing} übung${missing > 1 ? 'en' : ''} offen.</div>`;
+    else if (left <= 3) um.innerHTML = `<div class="urgency u-warn">noch ${left} tage — ${missing} übung${missing > 1 ? 'en' : ''} ausstehend.</div>`;
+    else um.innerHTML = `<div class="urgency u-ok">${left} tage übrig, ${missing} übung${missing > 1 ? 'en' : ''} zu erledigen.</div>`;
+  } else { um.innerHTML = ''; }
+
+  const wchips = document.getElementById('week-chips');
+  wchips.innerHTML = '';
+  if (pool.length === 0) { document.getElementById('week-empty').style.display = ''; }
+  else {
+    document.getElementById('week-empty').style.display = 'none';
+    const sorted = [...pool].sort((a, b) => (wc[a] || 0) - (wc[b] || 0));
+    sorted.forEach(name => {
+      const c = wc[name] || 0;
+      const el = document.createElement('button');
+      el.className = 'chip ' + (c >= 2 ? 'chip-done' : c === 1 ? 'chip-half' : 'chip-none');
+      el.innerHTML = `${name}<span class="badge">${c >= 2 ? '2×' : c === 1 ? '1×' : '0×'}</span>`;
+      el.title = c >= 2 ? 'Erledigt – klicken zum Zurücksetzen' : c === 1 ? '1× – nochmal für 2×' : 'Noch nicht – klicken für 1×';
+      el.onclick = () => cycleEx(name);
+      wchips.appendChild(el);
+    });
+  }
+
+  const pchips = document.getElementById('pool-chips');
+  pchips.innerHTML = '';
+  if (pool.length === 0) { document.getElementById('pool-empty').style.display = ''; }
+  else {
+    document.getElementById('pool-empty').style.display = 'none';
+    pool.forEach(name => {
+      const el = document.createElement('button');
+      el.className = 'chip chip-pool'; el.textContent = name;
+      el.oncontextmenu = e => { e.preventDefault(); removeFromPool(name); };
+      pchips.appendChild(el);
+    });
+  }
+}
+
+// ── Init ────────────────────────────────────────────────────
+try { const r = localStorage.getItem('wt_local'); if (r) state = JSON.parse(r); } catch(e) {}
+render();
+const cid = getClientId();
+if (cid) { initGapi(); }
+else {
+  setSyncStatus('err', 'Keine Client-ID – bitte in ⚙ Einstellungen eintragen');
+  // local-only fallback still works
+}
+</script>
+</body>
+</html>
