@@ -184,26 +184,28 @@ canvas.chart{width:100%!important;height:130px!important}
 .chart-empty{font-style:italic;font-size:13px;color:var(--dim);padding:8px 0}
 
 /* ── Knight ── */
-.knight-wrap{display:flex;align-items:flex-end;gap:14px;margin-bottom:1.5rem;padding:14px;background:var(--surface);border:.5px solid var(--border);border-radius:3px;position:relative;overflow:hidden}
-.knight-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.3}
-.knight-sprite{flex-shrink:0;width:48px;height:64px;position:relative;cursor:pointer}
-.knight-sprite:hover .knight-svg{filter:brightness(1.2)}
-.knight-bubble{flex:1;position:relative}
-.knight-bubble-inner{background:var(--bg2);border:.5px solid var(--border2);border-radius:3px;padding:10px 12px;font-size:14px;font-style:italic;color:var(--text);line-height:1.5;min-height:44px}
-.knight-bubble-inner::before{content:'';position:absolute;left:-7px;bottom:18px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:7px solid var(--border2)}
-.knight-bubble-inner::after{content:'';position:absolute;left:-5px;bottom:19px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid var(--bg2)}
-.knight-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;opacity:.7}
-.knight-options{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.knight-section{display:grid;grid-template-columns:90px 1fr;gap:12px;margin-bottom:1.5rem;align-items:start}
+.knight-sprite{cursor:pointer;position:relative}
+.knight-sprite:hover .knight-svg{filter:brightness(1.15)}
+.knight-dialog{display:flex;flex-direction:column;gap:8px}
+.knight-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);opacity:.7}
+.knight-bubble-inner{background:var(--bg2);border:.5px solid var(--border2);border-radius:3px;padding:10px 12px;font-size:14px;font-style:italic;color:var(--text);line-height:1.5;min-height:44px;position:relative}
+.knight-bubble-inner::before{content:'';position:absolute;left:-7px;top:16px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:7px solid var(--border2)}
+.knight-bubble-inner::after{content:'';position:absolute;left:-5px;top:17px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid var(--bg2)}
+.knight-options{display:flex;gap:6px;flex-wrap:wrap}
 .knight-opt-btn{background:none;border:.5px solid var(--border2);color:var(--dim);font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;padding:5px 12px;border-radius:1px;cursor:pointer;transition:all .2s}
 .knight-opt-btn:hover{border-color:var(--gold);color:var(--text)}
 
 /* Knight idle animation */
-@keyframes knight-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
-@keyframes knight-blink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-.knight-body{animation:knight-idle 2.5s ease-in-out infinite}
-.knight-eye{animation:knight-blink 4s ease-in-out infinite}
-@keyframes knight-talk{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.3)}}
-.knight-talking .knight-mouth{animation:knight-talk .2s ease-in-out infinite}
+@keyframes knight-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes knight-blink{0%,88%,100%{transform:scaleY(1)}93%{transform:scaleY(.08)}}
+@keyframes knight-breathe{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.03)}}
+.knight-body{animation:knight-idle 3s ease-in-out infinite}
+.knight-eye-l,.knight-eye-r{animation:knight-blink 4.5s ease-in-out infinite}
+.knight-eye-r{animation-delay:.1s}
+.knight-chest{animation:knight-breathe 3s ease-in-out infinite}
+@keyframes knight-talk{0%,100%{d:path('M19 23 Q22 25 25 23')}50%{d:path('M19 23 Q22 21 25 23')}}
+.knight-talking .knight-mouth{animation:knight-talk .25s ease-in-out infinite}
 </style>
 </head>
 <body>
@@ -253,52 +255,74 @@ canvas.chart{width:100%!important;height:130px!important}
 
 
   <!-- KNIGHT -->
-  <div class="knight-wrap" id="knight-wrap">
-    <div class="knight-sprite" onclick="knightTap()" title="Mit dem Ritter sprechen">
-      <svg class="knight-svg" width="48" height="64" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg">
+  <div class="knight-section">
+    <div class="knight-sprite" onclick="knightTap()">
+      <svg class="knight-svg" width="90" height="130" viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
         <g class="knight-body">
-          <!-- Helmet -->
-          <ellipse cx="24" cy="14" rx="12" ry="13" fill="#2a3550" stroke="#4a6090" stroke-width="1"/>
-          <!-- Visor slit -->
-          <rect x="16" y="13" width="16" height="3" rx="1" fill="#0a0d14"/>
-          <!-- Eyes -->
-          <g class="knight-eye">
-            <circle cx="20" cy="14.5" r="1.5" fill="#b8922a"/>
-            <circle cx="28" cy="14.5" r="1.5" fill="#b8922a"/>
+          <!-- Shadow -->
+          <ellipse cx="32" cy="88" rx="14" ry="3" fill="#000" opacity=".3"/>
+          <!-- Back leg (far) -->
+          <path d="M28 66 L26 68 L24 82 L28 82 L29 70 Z" fill="#1a2030" stroke="#2a3248" stroke-width=".5"/>
+          <!-- Cape -->
+          <path d="M22 32 Q14 45 16 62 Q18 68 22 66 Q20 52 24 42 Z" fill="#6a1010" stroke="#8b1818" stroke-width=".5"/>
+          <path d="M22 32 Q15 50 18 65 Q19 67 21 66 Q18 54 22 44 Z" fill="#4a0808"/>
+          <!-- Torso - 3/4 angle, slightly turned right -->
+          <g class="knight-chest">
+            <path d="M22 32 L18 34 L17 52 L22 54 L32 54 L38 50 L37 34 L32 32 Z" fill="#243048" stroke="#3a5080" stroke-width=".8"/>
+            <!-- Chest plate lines -->
+            <path d="M22 32 L22 54" stroke="#3a5080" stroke-width=".4" opacity=".6"/>
+            <path d="M18 40 L37 40" stroke="#3a5080" stroke-width=".4" opacity=".5"/>
+            <!-- Rune on chest -->
+            <text x="26" y="46" font-size="6" fill="#b8922a" opacity=".6" font-family="serif">ᚱ</text>
           </g>
-          <!-- Mouth slot -->
-          <rect class="knight-mouth" x="18" y="18" width="12" height="2" rx="1" fill="#0a0d14"/>
+          <!-- Left pauldron (far shoulder, smaller) -->
+          <path d="M18 32 Q14 30 13 36 Q14 40 18 38 L19 34 Z" fill="#1e2840" stroke="#3a5080" stroke-width=".5"/>
+          <!-- Right pauldron (near shoulder, larger) -->
+          <path d="M32 32 Q38 29 42 33 Q42 39 37 38 L36 34 Z" fill="#243048" stroke="#3a5080" stroke-width=".8"/>
+          <!-- Right arm (near, sword arm, foreshortened toward viewer) -->
+          <path d="M37 36 L40 38 L42 50 L38 52 L36 42 Z" fill="#1e2840" stroke="#2a3a58" stroke-width=".5"/>
+          <!-- Gauntlet right -->
+          <path d="M38 50 L42 50 L43 56 L37 57 Z" fill="#243048" stroke="#3a5080" stroke-width=".5"/>
+          <!-- Sword -->
+          <rect x="41" y="30" width="2.5" height="26" rx="1" fill="#8090a0" stroke="#a0b0c0" stroke-width=".3"/>
+          <rect x="38" y="42" width="9" height="2" rx=".5" fill="#b8922a" stroke="#ddb84a" stroke-width=".3"/>
+          <rect x="41.5" y="27" width="1.5" height="5" rx=".5" fill="#b8922a"/>
+          <!-- Left arm (far, partially hidden) -->
+          <path d="M18 36 L15 40 L16 50 L19 50 L19 40 Z" fill="#1a2030" stroke="#2a3248" stroke-width=".4"/>
+          <!-- Neck -->
+          <path d="M24 26 L22 32 L32 32 L30 26 Z" fill="#1e2840" stroke="#2a3a58" stroke-width=".5"/>
+          <!-- Head - 3/4 angle -->
+          <path d="M20 14 Q18 10 20 6 Q24 1 30 2 Q36 3 38 8 Q40 14 36 20 Q34 24 30 26 Q26 27 23 25 Q20 22 20 14 Z" fill="#2a3a58" stroke="#4060a0" stroke-width=".8"/>
+          <!-- Helmet ridge -->
+          <path d="M24 2 Q27 0 30 2 Q27 1 24 2" stroke="#4060a0" stroke-width="1" fill="none"/>
+          <!-- Visor - 3/4 angle, asymmetric -->
+          <path d="M20 15 Q24 13 30 14 Q34 15 36 17 L35 19 Q31 17 27 17 Q23 17 21 18 Z" fill="#090c14" stroke="#2a3a58" stroke-width=".4"/>
+          <!-- Eyes visible through visor -->
+          <g class="knight-eye-l">
+            <ellipse cx="24" cy="16" rx="2" ry="1.2" fill="#b8922a" opacity=".9"/>
+            <ellipse cx="24" cy="16" rx="1" ry=".8" fill="#ddb84a"/>
+          </g>
+          <g class="knight-eye-r">
+            <ellipse cx="30" cy="15.5" rx="2.2" ry="1.3" fill="#b8922a" opacity=".9"/>
+            <ellipse cx="30" cy="15.5" rx="1.1" ry=".9" fill="#ddb84a"/>
+          </g>
+          <!-- Mouth -->
+          <path class="knight-mouth" d="M23 21 Q26.5 23 30 21" stroke="#4060a0" stroke-width=".8" fill="none" stroke-linecap="round"/>
           <!-- Plume -->
-          <path d="M24 2 Q20 6 22 10" stroke="#c44040" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M24 2 Q28 5 26 10" stroke="#8b2020" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <!-- Neck/gorget -->
-          <rect x="18" y="25" width="12" height="5" rx="1" fill="#1e2535" stroke="#2a3550" stroke-width=".5"/>
-          <!-- Chest plate -->
-          <rect x="13" y="29" width="22" height="20" rx="2" fill="#2a3550" stroke="#4a6090" stroke-width="1"/>
-          <!-- Chest line -->
-          <line x1="24" y1="29" x2="24" y2="49" stroke="#4a6090" stroke-width=".5"/>
-          <!-- Pauldrons -->
-          <ellipse cx="11" cy="32" rx="5" ry="4" fill="#2a3550" stroke="#4a6090" stroke-width=".5"/>
-          <ellipse cx="37" cy="32" rx="5" ry="4" fill="#2a3550" stroke="#4a6090" stroke-width=".5"/>
-          <!-- Arms -->
-          <rect x="5" y="34" width="7" height="14" rx="2" fill="#1e2535" stroke="#2a3550" stroke-width=".5"/>
-          <rect x="36" y="34" width="7" height="14" rx="2" fill="#1e2535" stroke="#2a3550" stroke-width=".5"/>
-          <!-- Gauntlets -->
-          <rect x="5" y="46" width="7" height="6" rx="1" fill="#2a3550" stroke="#4a6090" stroke-width=".5"/>
-          <rect x="36" y="46" width="7" height="6" rx="1" fill="#2a3550" stroke="#4a6090" stroke-width=".5"/>
-          <!-- Sword handle in right hand -->
-          <rect x="39" y="38" width="2" height="12" rx="1" fill="#b8922a"/>
-          <rect x="37" y="44" width="6" height="1.5" rx=".5" fill="#b8922a"/>
+          <path d="M28 2 Q22 -2 20 4 Q22 2 26 5" stroke="#c44040" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M28 2 Q24 0 23 6" stroke="#8b1818" stroke-width="1.2" fill="none" stroke-linecap="round"/>
           <!-- Belt -->
-          <rect x="13" y="48" width="22" height="4" rx="1" fill="#1a1a2a" stroke="#2a3550" stroke-width=".5"/>
-          <rect x="22" y="48" width="4" height="4" rx=".5" fill="#b8922a"/>
-          <!-- Legs -->
-          <rect x="14" y="51" width="8" height="13" rx="2" fill="#1e2535" stroke="#2a3550" stroke-width=".5"/>
-          <rect x="26" y="51" width="8" height="13" rx="2" fill="#1e2535" stroke="#2a3550" stroke-width=".5"/>
+          <path d="M17 52 L37 52 L38 56 L16 56 Z" fill="#12151e" stroke="#2a3248" stroke-width=".5"/>
+          <rect x="26" y="52" width="5" height="4" rx=".5" fill="#b8922a"/>
+          <!-- Front leg -->
+          <path d="M30 56 L32 58 L34 80 L30 82 L28 70 L28 58 Z" fill="#243048" stroke="#3a5080" stroke-width=".5"/>
+          <!-- Boots -->
+          <path d="M24 80 L28 80 L30 86 L22 86 Z" fill="#1a2030" stroke="#2a3248" stroke-width=".5"/>
+          <path d="M30 80 L34 80 L36 86 L28 86 Z" fill="#1e2840" stroke="#2a3248" stroke-width=".5"/>
         </g>
       </svg>
     </div>
-    <div class="knight-bubble">
+    <div class="knight-dialog">
       <div class="knight-name">Ser Aldric, Hüter der Disziplin</div>
       <div class="knight-bubble-inner" id="knight-text">...</div>
       <div class="knight-options" id="knight-options"></div>
@@ -1092,15 +1116,7 @@ function knightSpeak(text, options) {
 function knightReply(reply) {
   document.getElementById('knight-options').innerHTML = '';
   knightSpeak(reply, null);
-  // after reply, show a "weiter" button
-  setTimeout(() => {
-    const optEl = document.getElementById('knight-options');
-    const btn = document.createElement('button');
-    btn.className = 'knight-opt-btn';
-    btn.textContent = '...';
-    btn.onclick = () => knightInit();
-    optEl.appendChild(btn);
-  }, reply.length * 22 + 200);
+  // no restart button - Ser Aldric is done for today
 }
 
 function knightTap() {
