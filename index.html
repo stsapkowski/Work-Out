@@ -390,11 +390,14 @@ function scheduleSave(){try{localStorage.setItem(LS_STATE,JSON.stringify(state))
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='workout_backup.json';a.click();}
 
 // ── Dates ────────────────────────────────────────────────────
-function todayStr(){return new Date().toISOString().slice(0,10);}
-function wk(o){const d=new Date();const day=d.getDay()||7;d.setDate(d.getDate()-(day-1)+o*7);d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
+function todayStr(){return localDateStr(new Date());}
+function localDateStr(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,"0");const dd=String(d.getDate()).padStart(2,"0");return`${y}-${m}-${dd}`;}
+function wk(o){const d=new Date();const day=d.getDay()||7;
+d.setDate(d.getDate()-(day-1)+o*7);d.setHours(0,0,0,0);return localDateStr(d);}
 function wLabel(o){const m=new Date(wk(o));const e=new Date(m);e.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});if(o===0)return`${f(m)} – ${f(e)}`;if(o===-1)return'Letzte Woche';if(o===1)return'Nächste Woche';return`${f(m)} – ${f(e)}`;}
 function daysLeft(){const d=new Date().getDay()||7;return 7-d;}
-function getWeekDates(o){const mon=new Date(wk(o));return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().slice(0,10);});}
+function getWeekDates(o){const mon=new Date(wk(o));return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return localDateStr(d);});}
+
 function getWeekCount(name){const dates=getWeekDates(wo);return(state.logs[name]||[]).filter(l=>dates.includes(l.date)).length;}
 function getExType(name){const ex=state.pool.find(p=>p.name===name);return ex?ex.type:'sets';}
 
