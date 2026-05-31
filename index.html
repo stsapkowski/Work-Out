@@ -12,22 +12,51 @@
   --text:#c8cfe0;--dim:#5a6580;
   --gold:#c9a84c;--gold2:#e8c96a;--gold-dim:#3d2e0a;
   --red:#8b2020;--red2:#c44040;--red-t:#f09090;--red-bg:#1a0808;
-  --amber:#7a4a00;--amber2:#c07800;--amber-t:#f0b060;--amber-bg:#150d00;
   --green:#1a4a1a;--green2:#3a8a3a;--green-t:#80c880;--green-bg:#081408;
+  --blue:#1a2a4a;--blue2:#3a6aaa;--blue-t:#90c0f0;--blue-bg:#080d18;
+  --amber:#7a4a00;--amber2:#c07800;--amber-t:#f0b060;--amber-bg:#150d00;
+  --prog: 0; /* 0-1 */
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;font-size:16px;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;font-size:16px;min-height:100vh;overflow-x:hidden;transition:background .8s}
+
+/* ── Fog / atmosphere layer ── */
+.fog-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.fog-1,.fog-2,.fog-3{position:absolute;border-radius:50%;filter:blur(80px);transition:opacity 2s,background 2s}
+.fog-1{width:600px;height:300px;top:-100px;left:-100px;animation:drift1 18s ease-in-out infinite alternate}
+.fog-2{width:500px;height:200px;bottom:0;right:-100px;animation:drift2 22s ease-in-out infinite alternate}
+.fog-3{width:400px;height:200px;top:40%;left:30%;animation:drift3 15s ease-in-out infinite alternate}
+@keyframes drift1{0%{transform:translate(0,0)}100%{transform:translate(60px,30px)}}
+@keyframes drift2{0%{transform:translate(0,0)}100%{transform:translate(-50px,-20px)}}
+@keyframes drift3{0%{transform:translate(0,0)}100%{transform:translate(30px,-40px)}}
+
+/* Star field */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,3s) ease-in-out infinite alternate}
+@keyframes twinkle{0%{opacity:.1}100%{opacity:var(--max-op,.8)}}
+
 .container{max-width:640px;margin:0 auto;padding:2rem 1rem 4rem;position:relative;z-index:1}
 
+/* ── Header ── */
 .app-header{text-align:center;margin-bottom:2rem;position:relative;padding:1.5rem 0 1rem}
 .app-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:280px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4}
-.app-header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:200px;height:.5px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
-.crest{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
-.crest-line{flex:1;max-width:80px;height:.5px;background:linear-gradient(90deg,transparent,var(--gold));opacity:.3}
-.crest-line.r{background:linear-gradient(90deg,var(--gold),transparent)}
-.crest-symbol{color:var(--gold);font-size:14px;opacity:.6;letter-spacing:4px}
-.app-title{font-family:'Cinzel',serif;font-size:10px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:8px}
+
+/* XP Ring */
+.xp-ring-wrap{position:relative;width:100px;height:100px;margin:0 auto 10px;cursor:default}
+.xp-ring-wrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.xp-bg{fill:none;stroke:var(--border2);stroke-width:3}
+.xp-fill{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),stroke 1s}
+.xp-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.xp-level{font-family:'Cinzel',serif;font-size:22px;font-weight:700;line-height:1;transition:color 1s}
+.xp-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:2px}
+
+.app-title{font-family:'Cinzel',serif;font-size:10px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:4px}
+.rank-title{font-family:'Cinzel',serif;font-size:13px;font-weight:400;letter-spacing:.1em;color:var(--gold2);opacity:.8;margin-bottom:8px;font-style:italic;transition:all 1s;min-height:20px}
+
+/* Levelup flash */
+@keyframes levelup-flash{0%{opacity:0;transform:scale(.8)}20%{opacity:1;transform:scale(1.05)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.95)}}
+.levelup-msg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--gold2);text-shadow:0 0 40px var(--gold),0 0 80px var(--gold);pointer-events:none;animation:levelup-flash 2.5s ease forwards;display:none}
+
 .week-display{display:flex;align-items:center;justify-content:center;gap:14px}
 .week-label{font-family:'Cinzel',serif;font-size:22px;font-weight:600;color:var(--text);letter-spacing:.04em}
 .week-btn{background:none;border:.5px solid var(--border2);color:var(--dim);cursor:pointer;font-size:12px;padding:5px 14px;border-radius:1px;font-family:'Cinzel',serif;transition:all .2s}
@@ -36,6 +65,10 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .u-ok{background:var(--green-bg);border-color:var(--green2);color:var(--green-t)}
 .u-warn{background:var(--amber-bg);border-color:var(--amber2);color:var(--amber-t)}
 .u-crit{background:var(--red-bg);border-color:var(--red2);color:var(--red-t)}
+
+/* Rune border that glows with progress */
+.rune-border{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 2s}
+.rune-border svg{width:100%;height:100%}
 
 .sync-bar{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;font-size:12px;color:var(--dim);font-family:'Cinzel',serif;letter-spacing:.04em}
 .sdot{width:6px;height:6px;border-radius:50%;background:var(--green2);flex-shrink:0}
@@ -63,13 +96,16 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .orn-divider{display:flex;align-items:center;gap:8px;margin:1.25rem 0;color:var(--gold);opacity:.25;font-size:9px;letter-spacing:6px;justify-content:center}
 .orn-divider::before,.orn-divider::after{content:'';flex:1;height:.5px;background:var(--border)}
 
+/* Pulsing rune ornaments */
+.rune-ornament{text-align:center;font-size:11px;letter-spacing:8px;margin:4px 0;transition:color 1s,text-shadow 1s}
+
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:1.25rem}
 .stat{background:var(--surface);border:.5px solid var(--border);border-radius:2px;padding:10px 12px;position:relative;overflow:hidden}
 .stat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px}
-.stat.s-none::before{background:var(--red2)}.stat.s-half::before{background:var(--amber2)}.stat.s-done::before{background:var(--green2)}
+.stat.s-none::before{background:var(--red2)}.stat.s-half::before{background:var(--green2)}.stat.s-done::before{background:var(--gold)}
 .stat-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
 .stat-val{font-family:'Cinzel',serif;font-size:30px;font-weight:700}
-.stat.s-none .stat-val{color:var(--red-t)}.stat.s-half .stat-val{color:var(--amber-t)}.stat.s-done .stat-val{color:var(--green-t)}
+.stat.s-none .stat-val{color:var(--red-t)}.stat.s-half .stat-val{color:var(--green-t)}.stat.s-done .stat-val{color:var(--gold2)}
 
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1rem}
 .leg{font-size:12px;font-style:italic;color:var(--dim);display:flex;align-items:center;gap:5px}
@@ -80,13 +116,18 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .ex-chip::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 60%);pointer-events:none}
 .ex-chip:hover{transform:translateY(-1px)}
 .ex-chip:active{transform:scale(.97)}
+/* 0x = red */
 .ex-none{background:var(--red-bg);border-color:var(--red);color:var(--red-t)}
 .ex-none:hover{box-shadow:0 4px 14px rgba(139,32,32,.3);border-color:var(--red2)}
-.ex-half{background:var(--amber-bg);border-color:var(--amber);color:var(--amber-t)}
-.ex-half:hover{box-shadow:0 4px 14px rgba(122,74,0,.3);border-color:var(--amber2)}
-.ex-done{background:var(--green-bg);border-color:var(--green);color:var(--green-t)}
-.ex-done:hover{box-shadow:0 4px 14px rgba(26,74,26,.3);border-color:var(--green2)}
-.ex-count{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;opacity:.6}
+/* 1x = green */
+.ex-once{background:var(--green-bg);border-color:var(--green);color:var(--green-t)}
+.ex-once:hover{box-shadow:0 4px 14px rgba(26,74,26,.3);border-color:var(--green2)}
+/* 2x = gold */
+.ex-done{background:var(--gold-dim);border-color:var(--gold);color:var(--gold2)}
+.ex-done:hover{box-shadow:0 4px 20px rgba(201,168,76,.25);border-color:var(--gold2)}
+.ex-count{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;opacity:.7}
+/* simple type – tap to check */
+.ex-simple-done{background:var(--gold-dim);border-color:var(--gold);color:var(--gold2)}
 
 @keyframes pickup{0%{transform:scale(1)}30%{transform:scale(1.08)}60%{transform:scale(.98)}100%{transform:scale(1)}}
 .pickup{animation:pickup .35s ease}
@@ -98,9 +139,7 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .type-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);border:.5px solid var(--gold-dim);background:var(--gold-dim);border-radius:1px;padding:2px 7px;white-space:nowrap}
 
 .field-row{display:grid;gap:8px;margin-bottom:10px}
-.field-row.c1{grid-template-columns:1fr}
-.field-row.c2{grid-template-columns:1fr 1fr}
-.field-row.c3{grid-template-columns:1fr 1fr 1fr}
+.field-row.c1{grid-template-columns:1fr}.field-row.c2{grid-template-columns:1fr 1fr}.field-row.c3{grid-template-columns:1fr 1fr 1fr}
 .field-group{display:flex;flex-direction:column;gap:4px}
 .field-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
 .field-input{background:var(--bg2);border:.5px solid var(--border2);color:var(--text);font-family:'Crimson Pro',serif;font-size:15px;padding:7px 10px;border-radius:1px;outline:none;width:100%}
@@ -118,7 +157,6 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .empty-text{font-style:italic;font-size:14px;color:var(--dim);padding:6px 0}
 .help-text{font-style:italic;font-size:12px;color:var(--dim);margin-top:6px}
 
-/* Satz rows */
 .satz-row{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;align-items:end;margin-bottom:8px;padding:8px 10px;background:var(--bg2);border:.5px solid var(--border);border-radius:2px}
 .satz-nr{font-family:'Cinzel',serif;font-size:10px;color:var(--dim);letter-spacing:.06em;padding-bottom:8px}
 
@@ -147,14 +185,35 @@ canvas.chart{width:100%!important;height:130px!important}
 </style>
 </head>
 <body>
+
+<!-- Atmosphere layers -->
+<div class="fog-layer">
+  <div class="fog-1" id="fog1"></div>
+  <div class="fog-2" id="fog2"></div>
+  <div class="fog-3" id="fog3"></div>
+</div>
+<div class="stars" id="stars"></div>
+
+<div class="levelup-msg" id="levelup-msg"></div>
+
 <div class="container">
   <header class="app-header">
-    <div class="crest">
-      <div class="crest-line"></div>
-      <div class="crest-symbol">⬥ ✦ ⬥</div>
-      <div class="crest-line r"></div>
-    </div>
     <div class="app-title">Workout Tracker</div>
+
+    <!-- XP Ring -->
+    <div class="xp-ring-wrap">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle class="xp-bg" cx="50" cy="50" r="44"/>
+        <circle class="xp-fill" id="xp-fill" cx="50" cy="50" r="44" stroke-dasharray="276.46" stroke-dashoffset="276.46"/>
+      </svg>
+      <div class="xp-inner">
+        <div class="xp-level" id="xp-level">0</div>
+        <div class="xp-label">Level</div>
+      </div>
+    </div>
+
+    <div class="rank-title" id="rank-title">Der Schlafende</div>
+
     <div class="week-display">
       <button class="week-btn" onclick="cw(-1)">←</button>
       <span class="week-label" id="wlabel"></span>
@@ -176,17 +235,18 @@ canvas.chart{width:100%!important;height:130px!important}
   </div>
 
   <div id="view-week">
+    <div class="rune-ornament" id="rune-top">᛫ ᚱ ᚢ ᚾ ᛖ ᚾ ᛫</div>
     <div class="week-calendar" id="week-calendar"></div>
     <div class="orn-divider">⬥ ⬥ ⬥</div>
     <div class="stats">
       <div class="stat s-none"><div class="stat-label">Fehlt</div><div class="stat-val" id="s-none">0</div></div>
-      <div class="stat s-half"><div class="stat-label">Halb</div><div class="stat-val" id="s-half">0</div></div>
-      <div class="stat s-done"><div class="stat-label">Fertig</div><div class="stat-val" id="s-done">0</div></div>
+      <div class="stat s-half"><div class="stat-label">1× Gut</div><div class="stat-val" id="s-half">0</div></div>
+      <div class="stat s-done"><div class="stat-label">2× Gold</div><div class="stat-val" id="s-done">0</div></div>
     </div>
     <div class="legend">
       <span class="leg"><span style="color:#c44040;font-size:9px">◆</span> Offen</span>
-      <span class="leg"><span style="color:#c07800;font-size:9px">◆</span> 1× gemacht</span>
-      <span class="leg"><span style="color:#3a8a3a;font-size:9px">◆</span> 2× erledigt</span>
+      <span class="leg"><span style="color:#3a8a3a;font-size:9px">◆</span> 1× gemacht</span>
+      <span class="leg"><span style="color:#c9a84c;font-size:9px">◆</span> 2× erledigt</span>
     </div>
     <div class="section-hint">Übung antippen → Training eintragen</div>
     <div class="chips" id="week-chips"></div>
@@ -205,8 +265,9 @@ canvas.chart{width:100%!important;height:130px!important}
     <div class="type-toggle">
       <button class="type-toggle-btn active" id="tt-sets" onclick="selectType('sets')">Sätze</button>
       <button class="type-toggle-btn" id="tt-rp" onclick="selectType('restpause')">Rest-Pause</button>
+      <button class="type-toggle-btn" id="tt-simple" onclick="selectType('simple')">Einfach</button>
     </div>
-    <div style="margin-top:6px;font-size:12px;font-style:italic;color:var(--dim)" id="type-desc">x Sätze à y Wdh., optional mit Gewicht</div>
+    <div style="margin-top:6px;font-size:12px;font-style:italic;color:var(--dim)" id="type-desc">x Sätze, pro Satz Wdh. + optional Gewicht</div>
     <div style="margin-top:12px"><button class="action-btn primary" onclick="addToPool()">+ Hinzufügen</button></div>
     <p class="help-text">Rechtsklick auf eine Übung = löschen</p>
   </div>
@@ -241,30 +302,18 @@ canvas.chart{width:100%!important;height:130px!important}
   <div class="modal">
     <div class="modal-title" id="modal-title"></div>
     <div class="modal-sub" id="modal-sub"></div>
-
     <div class="modal-section">
       <div class="modal-section-title">Training eintragen</div>
-
       <div class="field-row c1" style="margin-bottom:12px">
-        <div class="field-group">
-          <span class="field-label">Datum</span>
-          <input class="field-input" type="date" id="f-date">
-        </div>
+        <div class="field-group"><span class="field-label">Datum</span><input class="field-input" type="date" id="f-date"></div>
       </div>
-
-      <!-- SÄTZE -->
       <div id="fields-sets">
         <div class="field-row c1" style="margin-bottom:12px">
-          <div class="field-group">
-            <span class="field-label">Anzahl Sätze</span>
-            <input class="field-input" type="number" id="f-s-count" placeholder="z.B. 3" min="1" max="10" oninput="buildSatzRows()">
-          </div>
+          <div class="field-group"><span class="field-label">Anzahl Sätze</span><input class="field-input" type="number" id="f-s-count" placeholder="z.B. 3" min="1" max="10" oninput="buildSatzRows()"></div>
         </div>
         <div id="satz-rows"></div>
         <div style="margin-top:4px;font-size:12px;font-style:italic;color:var(--dim)" id="satz-hint"></div>
       </div>
-
-      <!-- REST-PAUSE -->
       <div id="fields-rp" style="display:none">
         <div class="field-row c3">
           <div class="field-group"><span class="field-label">Erster Satz (Wdh.)</span><input class="field-input" type="number" id="f-r-first" placeholder="z.B. 12" min="0"></div>
@@ -276,19 +325,16 @@ canvas.chart{width:100%!important;height:130px!important}
           <div class="field-group"><span class="field-label">Notiz</span><input class="field-input" type="text" id="f-r-note" placeholder="optional" maxlength="60"></div>
         </div>
       </div>
-
       <div style="margin-top:12px;display:flex;gap:8px">
         <button class="action-btn primary" onclick="saveLog()" style="flex:1">Eintragen ✦</button>
         <button class="action-btn" onclick="closeModal()">Abbrechen</button>
       </div>
     </div>
-
     <div class="modal-section">
       <div class="modal-section-title" id="chart-label">Entwicklung</div>
       <div class="chart-wrap"><canvas id="chart-canvas" class="chart"></canvas></div>
       <div class="chart-empty" id="chart-empty" style="display:none">Noch keine Daten für einen Graphen.</div>
     </div>
-
     <div class="modal-section">
       <div class="modal-section-title">Verlauf</div>
       <div id="log-list"></div>
@@ -301,6 +347,7 @@ canvas.chart{width:100%!important;height:130px!important}
 <script src="https://apis.google.com/js/api.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
+// ── Audio ────────────────────────────────────────────────────
 function playPickup(){
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -315,22 +362,125 @@ function playPickup(){
     g2.gain.setValueAtTime(.1,t2);g2.gain.exponentialRampToValueAtTime(.001,t2+.4);o2.start(t2);o2.stop(t2+.4);
   }catch(e){}
 }
-function spawnSparkles(el){
+function playLevelup(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [[392,0],[523.25,.1],[659.25,.2],[783.99,.3],[1046.5,.45],[1318.5,.6]].forEach(([freq,t])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=freq;const st=ctx.currentTime+t;
+      g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.2,st+.03);g.gain.exponentialRampToValueAtTime(.001,st+.4);
+      o.start(st);o.stop(st+.4);
+    });
+  }catch(e){}
+}
+function spawnSparkles(el,gold){
   const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-  ['✦','✧','◆','⬥','✦','✧'].forEach((g,i)=>{
+  const gems=gold?['✦','★','◆','✦','★','◆','✧']:['✦','✧','◆','⬥','✦','✧'];
+  const colors=gold?['#e8c96a','#c9a84c','#fff8dc']:['#c9a84c','#e8c96a','#80c880'];
+  gems.forEach((g,i)=>{
     const s=document.createElement('div');s.className='sparkle';s.textContent=g;
-    s.style.cssText=`left:${cx+(Math.random()-.5)*70}px;top:${cy+(Math.random()-.5)*35}px;color:${i%2?'#c9a84c':'#e8c96a'};font-size:${9+Math.random()*9}px;animation-delay:${i*.07}s`;
+    s.style.cssText=`left:${cx+(Math.random()-.5)*80}px;top:${cy+(Math.random()-.5)*40}px;color:${colors[i%colors.length]};font-size:${10+Math.random()*10}px;animation-delay:${i*.07}s`;
     document.body.appendChild(s);setTimeout(()=>s.remove(),1000);
   });
 }
 
+// ── Stars ────────────────────────────────────────────────────
+function buildStars(count){
+  const container=document.getElementById('stars');container.innerHTML='';
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div');s.className='star';
+    const size=Math.random()<.8?.5+Math.random():1.5+Math.random();
+    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--max-op:${.3+Math.random()*.7};animation-delay:${Math.random()*4}s`;
+    container.appendChild(s);
+  }
+}
+
+// ── Atmosphere update ────────────────────────────────────────
+const RANKS=[
+  {min:0,  title:'Der Schlafende',        fogColor:'rgba(10,8,20,.6)',  starCount:20,  xpColor:'#5a6580'},
+  {min:.1, title:'Erwachender Krieger',   fogColor:'rgba(20,10,40,.5)', starCount:60,  xpColor:'#8060a0'},
+  {min:.26,title:'Stählerner Wille',      fogColor:'rgba(10,20,40,.4)', starCount:100, xpColor:'#4080c0'},
+  {min:.51,title:'Unerbittlicher',        fogColor:'rgba(20,30,10,.4)', starCount:140, xpColor:'#60a060'},
+  {min:.76,title:'Meister der Disziplin', fogColor:'rgba(40,30,5,.4)',  starCount:180, xpColor:'#c09040'},
+  {min:1,  title:'Legende dieser Woche',  fogColor:'rgba(40,30,5,.3)',  starCount:220, xpColor:'#e8c96a'},
+];
+
+let lastRankIdx=-1;
+
+function updateAtmosphere(pct){
+  // find rank
+  let rank=RANKS[0];
+  let rankIdx=0;
+  RANKS.forEach((r,i)=>{if(pct>=r.min){rank=r;rankIdx=i;}});
+
+  // XP ring
+  const circumference=276.46;
+  const offset=circumference*(1-pct);
+  const fill=document.getElementById('xp-fill');
+  fill.style.strokeDashoffset=offset;
+  fill.style.stroke=rank.xpColor;
+
+  // Level = number of completed weeks stored, simplified to rank index
+  document.getElementById('xp-level').textContent=rankIdx;
+  document.getElementById('xp-level').style.color=rank.xpColor;
+
+  // Rank title
+  document.getElementById('rank-title').textContent=rank.title;
+  document.getElementById('rank-title').style.color=pct>=1?'#e8c96a':pct>=.5?'#c9a84c':'#8090b0';
+
+  // Fog
+  const fc=rank.fogColor;
+  document.getElementById('fog1').style.background=fc;
+  document.getElementById('fog2').style.background=fc;
+  document.getElementById('fog3').style.background=fc.replace(/[\d.]+\)$/,'.25)');
+  document.getElementById('fog1').style.opacity=Math.max(.05,1-pct*.7);
+  document.getElementById('fog2').style.opacity=Math.max(.05,1-pct*.6);
+  document.getElementById('fog3').style.opacity=Math.max(.03,1-pct*.8);
+
+  // Stars
+  if(rankIdx!==lastRankIdx){
+    buildStars(rank.starCount);
+    lastRankIdx=rankIdx;
+  }
+
+  // Rune glow
+  const runeEl=document.getElementById('rune-top');
+  if(runeEl){
+    const glowStrength=Math.round(pct*12);
+    runeEl.style.color=pct>=1?'#e8c96a':pct>=.5?'#c9a84c':'#2a3550';
+    runeEl.style.textShadow=pct>.1?`0 0 ${glowStrength}px ${rank.xpColor}`:'none';
+  }
+
+  // Levelup animation
+  if(pct>=1&&lastPct<1){
+    showLevelup();
+  }
+}
+
+let lastPct=0;
+function showLevelup(){
+  playLevelup();
+  const el=document.getElementById('levelup-msg');
+  el.textContent='✦ Legende dieser Woche ✦';
+  el.style.display='block';
+  // spawn many sparkles from center
+  const cx=window.innerWidth/2,cy=window.innerHeight/2;
+  for(let i=0;i<20;i++){
+    const s=document.createElement('div');s.className='sparkle';
+    s.textContent=['✦','★','◆','⬥'][Math.floor(Math.random()*4)];
+    s.style.cssText=`left:${cx+(Math.random()-.5)*300}px;top:${cy+(Math.random()-.5)*200}px;color:#e8c96a;font-size:${12+Math.random()*16}px;animation-delay:${Math.random()*.5}s`;
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1200);
+  }
+  setTimeout(()=>{el.style.display='none';},2600);
+}
+
+// ── State ────────────────────────────────────────────────────
 const FILE_NAME='workout_tracker_data.json',SCOPES='https://www.googleapis.com/auth/drive.file';
 const LS_STATE='wt_local',LS_CLIENT='wt_client_id',LS_TOKEN='wt_access_token',LS_TOKEN_EXP='wt_token_exp';
 let state={pool:[],logs:{}};
 let fileId=null,wo=0,accessToken=null,tokenClient=null,gapiInited=false,gisInited=false,saveTimer=null;
 let currentModalEx=null,chartInstance=null,newExType='sets';
-
-const TYPE_DESCS={sets:'x Sätze, pro Satz Wdh. + optional Gewicht',restpause:'Erster Satz + Rest-Pause, mit Gewicht'};
+const TYPE_DESCS={sets:'x Sätze, pro Satz Wdh. + optional Gewicht',restpause:'Erster Satz + Rest-Pause, mit Gewicht',simple:'Einmal antippen = gemacht (z.B. Video-Training)'};
 
 // ── Auth ─────────────────────────────────────────────────────
 function getClientId(){return localStorage.getItem(LS_CLIENT)||'';}
@@ -340,7 +490,7 @@ function updateSettingsStatus(){const el=document.getElementById('settings-statu
 function saveToken(t,e){accessToken=t;localStorage.setItem(LS_TOKEN,t);localStorage.setItem(LS_TOKEN_EXP,Date.now()+(e-60)*1000);}
 function loadSavedToken(){const t=localStorage.getItem(LS_TOKEN),e=parseInt(localStorage.getItem(LS_TOKEN_EXP)||'0');if(t&&Date.now()<e){accessToken=t;return true;}localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_TOKEN_EXP);return false;}
 function clearToken(){accessToken=null;localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_TOKEN_EXP);}
-function selectType(t){newExType=t;['sets','rp'].forEach(k=>document.getElementById('tt-'+k).classList.remove('active'));document.getElementById('tt-'+(t==='sets'?'sets':'rp')).classList.add('active');document.getElementById('type-desc').textContent=TYPE_DESCS[t];}
+function selectType(t){newExType=t;['sets','rp','simple'].forEach(k=>document.getElementById('tt-'+k).classList.remove('active'));document.getElementById('tt-'+(t==='sets'?'sets':t==='restpause'?'rp':'simple')).classList.add('active');document.getElementById('type-desc').textContent=TYPE_DESCS[t];}
 
 function initAll(){
   const cid=getClientId();if(!cid){setSyncStatus('err','Keine Client-ID');return;}
@@ -377,7 +527,7 @@ async function loadData(){
     state=p;if(!state.logs)state.logs={};
     if(state.pool.length>0&&typeof state.pool[0]==='string')state.pool=state.pool.map(n=>({name:n,type:'sets'}));
     state.pool.forEach(ex=>{
-      if(ex.type==='bodyweight'||ex.type==='max')ex.type='sets';
+      if(['bodyweight','max'].includes(ex.type))ex.type='sets';
       if(ex.type==='weighted')ex.type='restpause';
     });
   }
@@ -390,53 +540,41 @@ function scheduleSave(){try{localStorage.setItem(LS_STATE,JSON.stringify(state))
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='workout_backup.json';a.click();}
 
 // ── Dates ────────────────────────────────────────────────────
+function localDateStr(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function todayStr(){return localDateStr(new Date());}
-function localDateStr(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,"0");const dd=String(d.getDate()).padStart(2,"0");return`${y}-${m}-${dd}`;}
-function wk(o){const d=new Date();const day=d.getDay()||7;
-d.setDate(d.getDate()-(day-1)+o*7);d.setHours(0,0,0,0);return localDateStr(d);}
+function wk(o){const d=new Date();const day=d.getDay()||7;d.setDate(d.getDate()-(day-1)+o*7);d.setHours(0,0,0,0);return localDateStr(d);}
 function wLabel(o){const m=new Date(wk(o));const e=new Date(m);e.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});if(o===0)return`${f(m)} – ${f(e)}`;if(o===-1)return'Letzte Woche';if(o===1)return'Nächste Woche';return`${f(m)} – ${f(e)}`;}
 function daysLeft(){const d=new Date().getDay()||7;return 7-d;}
 function getWeekDates(o){const mon=new Date(wk(o));return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return localDateStr(d);});}
-
 function getWeekCount(name){const dates=getWeekDates(wo);return(state.logs[name]||[]).filter(l=>dates.includes(l.date)).length;}
 function getExType(name){const ex=state.pool.find(p=>p.name===name);return ex?ex.type:'sets';}
 
 // ── Satz rows ────────────────────────────────────────────────
 function buildSatzRows(){
   const count=parseInt(document.getElementById('f-s-count').value)||0;
-  const container=document.getElementById('satz-rows');
-  const existing=container.querySelectorAll('.satz-row');
-  // get last weight for prefill propagation
-  let lastWeight='';
-  existing.forEach(r=>{const w=r.querySelector('.satz-weight');if(w&&w.value)lastWeight=w.value;});
-  container.innerHTML='';
+  const container=document.getElementById('satz-rows');container.innerHTML='';
   for(let i=0;i<Math.min(count,10);i++){
     const row=document.createElement('div');row.className='satz-row';
     row.innerHTML=`<span class="satz-nr">Satz ${i+1}</span>
       <div class="field-group"><span class="field-label">Wdh.</span><input class="field-input satz-reps" type="number" placeholder="z.B. 10" min="0" style="width:100%"></div>
       <div class="field-group"><span class="field-label">Gewicht (kg)</span><input class="field-input satz-weight" type="number" placeholder="optional" min="0" step="0.5" style="width:100%"></div>`;
     container.appendChild(row);
-    // prefill weight from first satz on input
     if(i===0){
       row.querySelector('.satz-weight').addEventListener('input',function(){
         const w=this.value;
         container.querySelectorAll('.satz-weight').forEach((el,idx)=>{if(idx>0&&!el.value)el.value=w;});
       });
     }
-    // prefill from previous entries
-    if(i>0&&lastWeight)row.querySelector('.satz-weight').value=lastWeight;
   }
-  // hint
-  const hint=document.getElementById('satz-hint');
-  hint.textContent=count>0?`${count} Satz${count>1?'e':''} – Gewicht beim ersten Satz eintragen, wird automatisch für alle übernommen`:'';
+  document.getElementById('satz-hint').textContent=count>0?`${count} Satz${count>1?'e':''} – Gewicht bei Satz 1 wird automatisch übernommen`:'';
 }
 
 // ── Modal ────────────────────────────────────────────────────
 function openModal(name){
   currentModalEx=name;const type=getExType(name);
   document.getElementById('modal-title').textContent=name;
-  document.getElementById('modal-sub').textContent=type==='sets'?'Sätze':'Rest-Pause · Mit Gewicht';
-  document.getElementById('chart-label').textContent=type==='sets'?'Entwicklung — Volumen / Gesamtwiederholungen':'Entwicklung — Volumen (kg × Wdh.)';
+  document.getElementById('modal-sub').textContent={sets:'Sätze',restpause:'Rest-Pause · Mit Gewicht',simple:'Einfach'}[type]||type;
+  document.getElementById('chart-label').textContent=type==='restpause'?'Entwicklung — Volumen':'Entwicklung — Gesamtwiederholungen';
   document.getElementById('fields-sets').style.display=type==='sets'?'':'none';
   document.getElementById('fields-rp').style.display=type==='restpause'?'':'none';
   document.getElementById('f-date').value=todayStr();
@@ -444,31 +582,45 @@ function openModal(name){
   document.getElementById('satz-rows').innerHTML='';
   document.getElementById('satz-hint').textContent='';
   ['f-r-first','f-r-weight','f-r-rp','f-r-sets','f-r-note'].forEach(id=>document.getElementById(id).value='');
-  // prefill weight for rest-pause
   if(type==='restpause'){const logs=state.logs[name]||[];if(logs.length>0&&logs[logs.length-1].weight)document.getElementById('f-r-weight').value=logs[logs.length-1].weight;}
   renderLogList(name);renderChart(name);
   document.getElementById('modal').style.display='flex';
 }
 function closeModal(){document.getElementById('modal').style.display='none';currentModalEx=null;}
 
+function handleSimpleTap(name,chipEl){
+  // toggle: 0->1->2->0
+  const dates=getWeekDates(wo);
+  const logs=state.logs[name]||[];
+  const weekLogs=logs.filter(l=>dates.includes(l.date));
+  if(weekLogs.length>=2){
+    // remove all this week's logs
+    state.logs[name]=logs.filter(l=>!dates.includes(l.date));
+  } else {
+    if(!state.logs[name])state.logs[name]=[];
+    state.logs[name].push({date:todayStr(),type:'simple'});
+    state.logs[name].sort((a,b)=>a.date.localeCompare(b.date));
+    playPickup();
+    chipEl.classList.add('pickup');
+    spawnSparkles(chipEl,weekLogs.length+1>=2);
+    setTimeout(()=>chipEl.classList.remove('pickup'),500);
+  }
+  scheduleSave();render();
+}
+
 function saveLog(){
   const name=currentModalEx;if(!name)return;
   const type=getExType(name);
   const date=document.getElementById('f-date').value||todayStr();
   let entry={date,type};
-
   if(type==='sets'){
     const rows=document.querySelectorAll('.satz-row');
     if(rows.length===0)return;
     const saetze=[];
-    rows.forEach(row=>{
-      const reps=parseFloat(row.querySelector('.satz-reps').value)||null;
-      const weight=parseFloat(row.querySelector('.satz-weight').value)||null;
-      if(reps)saetze.push({reps,weight});
-    });
+    rows.forEach(row=>{const reps=parseFloat(row.querySelector('.satz-reps').value)||null;const weight=parseFloat(row.querySelector('.satz-weight').value)||null;if(reps)saetze.push({reps,weight});});
     if(saetze.length===0)return;
     entry={...entry,saetze};
-  } else {
+  } else if(type==='restpause'){
     const first=parseFloat(document.getElementById('f-r-first').value)||null;
     const weight=parseFloat(document.getElementById('f-r-weight').value)||null;
     const rp=parseFloat(document.getElementById('f-r-rp').value)||null;
@@ -477,15 +629,15 @@ function saveLog(){
     if(!first&&!rp)return;
     entry={...entry,firstSet:first,weight,rpTotal:rp,rpSets,note};
   }
-
   if(!state.logs[name])state.logs[name]=[];
   state.logs[name].push(entry);
   state.logs[name].sort((a,b)=>a.date.localeCompare(b.date));
   scheduleSave();playPickup();renderLogList(name);renderChart(name);render();
   closeModal();
   setTimeout(()=>{
-    document.querySelectorAll('.ex-chip').forEach(c=>{
-      if(c.textContent.includes(name)){c.classList.add('pickup');spawnSparkles(c);setTimeout(()=>c.classList.remove('pickup'),500);}
+    const c=getWeekCount(name);
+    document.querySelectorAll('.ex-chip').forEach(chip=>{
+      if(chip.dataset.name===name){chip.classList.add('pickup');spawnSparkles(chip,c>=2);setTimeout(()=>chip.classList.remove('pickup'),500);}
     });
   },50);
 }
@@ -494,56 +646,42 @@ function deleteLog(name,idx){state.logs[name].splice(idx,1);scheduleSave();rende
 
 function calcLogMetric(l){
   const t=l.type||'sets';
-  if(t==='sets'&&l.saetze){
-    const totalReps=l.saetze.reduce((s,x)=>s+(x.reps||0),0);
-    const firstWeight=l.saetze.find(x=>x.weight)?.weight||null;
-    return{totalReps,vol:firstWeight?Math.round(firstWeight*totalReps):null,hasWeight:!!firstWeight};
-  }
-  if(t==='restpause'&&l.weight&&(l.firstSet||l.rpTotal)){
-    const total=(l.firstSet||0)+(l.rpTotal||0);
-    return{totalReps:total,vol:Math.round(l.weight*total),hasWeight:true};
-  }
-  // legacy
-  if(l.sets&&l.reps){const total=l.sets*l.reps;return{totalReps:total,vol:l.weight?Math.round(l.weight*total):null,hasWeight:!!l.weight};}
-  if(l.reps)return{totalReps:l.reps,vol:null,hasWeight:false};
+  if(t==='sets'&&l.saetze){const totalReps=l.saetze.reduce((s,x)=>s+(x.reps||0),0);const w=l.saetze.find(x=>x.weight)?.weight||null;return{totalReps,vol:w?Math.round(w*totalReps):null};}
+  if(t==='restpause'&&l.weight&&(l.firstSet||l.rpTotal)){const total=(l.firstSet||0)+(l.rpTotal||0);return{totalReps:total,vol:Math.round(l.weight*total)};}
+  if(l.sets&&l.reps){const total=l.sets*l.reps;return{totalReps:total,vol:l.weight?Math.round(l.weight*total):null};}
+  if(l.reps)return{totalReps:l.reps,vol:null};
   return null;
 }
 
 function renderLogList(name){
-  const logs=(state.logs[name]||[]).slice().reverse();
+  const logs=(state.logs[name]||[]).filter(l=>l.type!=='simple').slice().reverse();
   const cont=document.getElementById('log-list');const empty=document.getElementById('log-empty');
   cont.innerHTML='';
   if(logs.length===0){empty.style.display='';return;}empty.style.display='none';
   logs.forEach((l,ri)=>{
-    const idx=(state.logs[name]||[]).length-1-ri;
+    const idx=(state.logs[name]||[]).filter(l=>l.type!=='simple').length-1-ri;
+    const realIdx=(state.logs[name]||[]).indexOf(logs[logs.length-1-ri+logs.length-1-ri]);
     const parts=[];const t=l.type||'sets';
-    if(t==='sets'&&l.saetze){
-      const repsStr=l.saetze.map(s=>s.reps).join(', ');
-      const w=l.saetze.find(s=>s.weight)?.weight;
-      parts.push(`${l.saetze.length}× [${repsStr}]`);
-      if(w)parts.push(`${w} kg`);
-    } else if(t==='restpause'){
-      if(l.firstSet)parts.push(`1. Satz: ${l.firstSet}`);
-      if(l.weight)parts.push(`${l.weight} kg`);
-      if(l.rpTotal)parts.push(`RP: ${l.rpTotal}${l.rpSets?' / '+l.rpSets+'×':''}`);
-    } else {
-      // legacy
-      if(l.sets&&l.reps)parts.push(`${l.sets}×${l.reps}`);
-      if(l.weight)parts.push(`${l.weight} kg`);
-      if(l.reps&&!l.sets)parts.push(`${l.reps} Wdh.`);
-    }
+    if(t==='sets'&&l.saetze){const repsStr=l.saetze.map(s=>s.reps).join(', ');const w=l.saetze.find(s=>s.weight)?.weight;parts.push(`${l.saetze.length}× [${repsStr}]`);if(w)parts.push(`${w} kg`);}
+    else if(t==='restpause'){if(l.firstSet)parts.push(`1. Satz: ${l.firstSet}`);if(l.weight)parts.push(`${l.weight} kg`);if(l.rpTotal)parts.push(`RP: ${l.rpTotal}${l.rpSets?' / '+l.rpSets+'×':''}`);}
+    else{if(l.sets&&l.reps)parts.push(`${l.sets}×${l.reps}`);if(l.weight)parts.push(`${l.weight} kg`);if(l.reps&&!l.sets)parts.push(`${l.reps} Wdh.`);}
     if(l.note)parts.push(`"${l.note}"`);
-    const m=calcLogMetric(l);
-    const metric=m?(m.vol?`${m.vol} kg`:`${m.totalReps} Wdh.`):null;
+    const m=calcLogMetric(l);const metric=m?(m.vol?`${m.vol} kg`:`${m.totalReps} Wdh.`):null;
+    // find real index
+    const allLogs=state.logs[name]||[];
+    const actualIdx=allLogs.length-1-(logs.length-1-ri);
     const el=document.createElement('div');el.className='log-entry';
     el.innerHTML=`<span class="log-date">${l.date}</span><span class="log-data">${parts.join(' · ')}</span>${metric?`<span class="log-vol">${metric}</span>`:''}<button class="log-del">×</button>`;
-    el.querySelector('.log-del').onclick=()=>deleteLog(name,idx);
+    el.querySelector('.log-del').onclick=()=>{
+      // find correct index by reference
+      const i=state.logs[name].indexOf(l);if(i>-1)deleteLog(name,i);
+    };
     cont.appendChild(el);
   });
 }
 
 function renderChart(name){
-  const logs=state.logs[name]||[];
+  const logs=(state.logs[name]||[]).filter(l=>l.type!=='simple');
   const canvas=document.getElementById('chart-canvas');const empty=document.getElementById('chart-empty');
   const pts=[];
   logs.forEach(l=>{const m=calcLogMetric(l);if(m){const y=m.vol||m.totalReps;if(y)pts.push({x:l.date,y});}});
@@ -557,6 +695,7 @@ function renderChart(name){
       scales:{x:{type:'category',ticks:{color:'#5a6580',font:{size:10}},grid:{color:'#1e2535'}},y:{ticks:{color:'#5a6580',font:{size:10}},grid:{color:'#1e2535'},beginAtZero:false}}}});
 }
 
+// ── Pool ─────────────────────────────────────────────────────
 function addToPool(){
   const inp=document.getElementById('pool-input');const n=inp.value.trim();
   if(!n||state.pool.find(p=>p.name===n))return;
@@ -570,11 +709,21 @@ function setTab(t){
   if(t==='settings'){document.getElementById('client-id-input').value=getClientId();updateSettingsStatus();}
 }
 
+// ── Render ───────────────────────────────────────────────────
 const DAY_NAMES=['Mo','Di','Mi','Do','Fr','Sa','So'];
+const TYPE_SHORT={sets:'Sätze',restpause:'Rest-Pause',simple:'Einfach'};
 
 function render(){
   document.getElementById('wlabel').textContent=wLabel(wo);
   const pool=state.pool,today=todayStr(),weekDates=getWeekDates(wo);
+
+  // Progress
+  const total=pool.length;
+  const done=pool.filter(ex=>getWeekCount(ex.name)>=1).length;
+  const pct=total>0?done/total:0;
+  if(pct!==lastPct){updateAtmosphere(pct);lastPct=pct;}
+
+  // Calendar
   const cal=document.getElementById('week-calendar');cal.innerHTML='';
   weekDates.forEach((date,i)=>{
     const col=document.createElement('div');col.className='day-col'+(date===today?' today':'');
@@ -586,46 +735,63 @@ function render(){
       const c=document.getElementById('de-'+l.date);if(!c)return;
       const el=document.createElement('div');el.className='day-entry';
       el.textContent=ex.name.length>7?ex.name.slice(0,6)+'…':ex.name;el.title=ex.name;
-      el.onclick=()=>openModal(ex.name);c.appendChild(el);
+      el.onclick=()=>getExType(ex.name)!=='simple'&&openModal(ex.name);c.appendChild(el);
     });
   });
-  let done=0,half=0,none=0;
-  pool.forEach(ex=>{const c=getWeekCount(ex.name);if(c>=2)done++;else if(c===1)half++;else none++;});
-  document.getElementById('s-done').textContent=done;
-  document.getElementById('s-half').textContent=half;
-  document.getElementById('s-none').textContent=none;
+
+  // Stats
+  let doneCount=0,onceCount=0,noneCount=0;
+  pool.forEach(ex=>{const c=getWeekCount(ex.name);if(c>=2)doneCount++;else if(c===1)onceCount++;else noneCount++;});
+  document.getElementById('s-done').textContent=doneCount;
+  document.getElementById('s-half').textContent=onceCount;
+  document.getElementById('s-none').textContent=noneCount;
+
+  // Urgency
   const um=document.getElementById('urgency-msg');
   if(pool.length>0&&wo===0){
-    const left=daysLeft(),missing=none+half;
+    const left=daysLeft(),missing=noneCount+onceCount;
     if(missing===0)um.innerHTML=`<span class="urgency u-ok">Alle Übungen erledigt.</span>`;
     else if(left<=1)um.innerHTML=`<span class="urgency u-crit">Woche endet bald — noch ${missing} offen.</span>`;
     else if(left<=3)um.innerHTML=`<span class="urgency u-warn">${left} Tage übrig — ${missing} ausstehend.</span>`;
     else um.innerHTML=`<span class="urgency u-ok">${left} Tage übrig, ${missing} zu erledigen.</span>`;
   }else{um.innerHTML='';}
+
+  // Chips
   const wchips=document.getElementById('week-chips');wchips.innerHTML='';
   if(pool.length===0){document.getElementById('week-empty').style.display='';}
   else{
     document.getElementById('week-empty').style.display='none';
     [...pool].sort((a,b)=>getWeekCount(a.name)-getWeekCount(b.name)).forEach(ex=>{
-      const c=getWeekCount(ex.name);
+      const c=getWeekCount(ex.name);const type=getExType(ex.name);
       const btn=document.createElement('button');
-      btn.className='ex-chip '+(c>=2?'ex-done':c===1?'ex-half':'ex-none');
-      btn.innerHTML=`${ex.name}<span class="ex-count">${c>=2?'2×':c===1?'1×':'0×'}</span>`;
-      btn.onclick=()=>openModal(ex.name);wchips.appendChild(btn);
+      btn.dataset.name=ex.name;
+      if(type==='simple'){
+        btn.className='ex-chip '+(c>=2?'ex-done':c>=1?'ex-once':'ex-none');
+        btn.innerHTML=`${ex.name}<span class="ex-count">${c>=2?'2×':c>=1?'1×':'0×'}</span>`;
+        btn.onclick=()=>handleSimpleTap(ex.name,btn);
+      } else {
+        btn.className='ex-chip '+(c>=2?'ex-done':c>=1?'ex-once':'ex-none');
+        btn.innerHTML=`${ex.name}<span class="ex-count">${c>=2?'2×':c>=1?'1×':'0×'}</span>`;
+        btn.onclick=()=>openModal(ex.name);
+      }
+      wchips.appendChild(btn);
     });
   }
+
+  // Pool list
   const pl=document.getElementById('pool-list');pl.innerHTML='';
   if(pool.length===0){document.getElementById('pool-empty').style.display='';}
   else{
     document.getElementById('pool-empty').style.display='none';
     pool.forEach(ex=>{
       const el=document.createElement('div');el.className='pool-item';
-      el.innerHTML=`<span style="flex:1">${ex.name}</span><span class="type-badge">${ex.type==='sets'?'Sätze':'Rest-Pause'}</span>`;
+      el.innerHTML=`<span style="flex:1">${ex.name}</span><span class="type-badge">${TYPE_SHORT[ex.type]||ex.type}</span>`;
       el.oncontextmenu=e=>{e.preventDefault();removeFromPool(ex.name);};pl.appendChild(el);
     });
   }
 }
 
+// ── Boot ─────────────────────────────────────────────────────
 try{
   const r=localStorage.getItem(LS_STATE);
   if(r){const p=JSON.parse(r);state=p;if(!state.logs)state.logs={};
@@ -633,6 +799,8 @@ try{
     state.pool.forEach(ex=>{if(['bodyweight','max'].includes(ex.type))ex.type='sets';if(ex.type==='weighted')ex.type='restpause';});
   }
 }catch(e){}
+buildStars(20);
+updateAtmosphere(0);
 render();
 window.addEventListener('load',()=>{
   const cid=getClientId();if(!cid){setSyncStatus('err','Keine Client-ID – bitte in ⚙ eintragen');return;}
