@@ -195,7 +195,7 @@ canvas.chart{width:100%!important;height:130px!important}
 .knight-bubble-inner::before{content:'';position:absolute;left:-7px;top:16px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:7px solid var(--border2)}
 .knight-bubble-inner::after{content:'';position:absolute;left:-5px;top:17px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid var(--bg2)}
 .knight-options{display:flex;gap:6px;flex-wrap:wrap}
-.knight-opt-btn{background:none;border:.5px solid var(--border2);color:var(--dim);font-family:'Crimson Pro',serif;font-size:11px;font-style:italic;padding:4px 8px;border-radius:1px;cursor:pointer;transition:all .2s;text-align:left;width:100%}
+.knight-opt-btn{background:none;border:.5px solid var(--border2);color:var(--dim);font-family:'Crimson Pro',serif;font-size:13px;font-style:italic;padding:5px 12px;border-radius:1px;cursor:pointer;transition:all .2s}
 .knight-opt-btn:hover{border-color:var(--gold);color:var(--text)}
 
 /* Knight idle animation */
@@ -265,18 +265,20 @@ canvas.chart{width:100%!important;height:130px!important}
 
   <div id="view-week">
     <div class="rune-ornament" id="rune-top">᛫ ᚱ ᚢ ᚾ ᛖ ᚾ ᛫</div>
-    <div style="display:grid;grid-template-columns:100px 1fr;gap:10px;margin-bottom:1.5rem;align-items:start">
-      <!-- Left: Knight + dialog -->
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div class="knight-sprite" onclick="knightTap()">
-          
-        </div>
-        <div class="knight-name" style="font-size:8px">Ser Aldric</div>
-        <div class="knight-bubble-inner" id="knight-text" style="font-size:12px;padding:7px 9px">...</div>
-        <div id="knight-options" style="display:flex;flex-direction:column;gap:4px"></div>
+    <!-- Calendar full width -->
+    <div class="week-calendar" id="week-calendar"></div>
+    <!-- Knight dialog below calendar, knight floats left -->
+    <div style="display:flex;gap:12px;margin:10px 0 1.25rem;align-items:flex-start">
+      <div class="knight-sprite" onclick="knightTap()" style="flex-shrink:0;width:60px">
+        <svg class="knight-svg" width="60" height="90" viewBox="0 0 56 90" xmlns="http://www.w3.org/2000/svg">
+
+        </svg>
       </div>
-      <!-- Right: Calendar -->
-      <div class="week-calendar" id="week-calendar"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <div class="knight-name">Ser Aldric, Hüter der Disziplin</div>
+        <div class="knight-bubble-inner" id="knight-text" style="position:relative">...</div>
+        <div id="knight-options" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
     </div>
     <div class="orn-divider">⬥ ⬥ ⬥</div>
     <div class="stats">
