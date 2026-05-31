@@ -10,7 +10,7 @@
   --bg:#090a0e;--bg2:#0d0f15;--surface:#12151e;--surface2:#181c28;
   --border:#1e2535;--border2:#252d40;
   --text:#c8cfe0;--dim:#5a6580;
-  --gold:#c9a84c;--gold2:#e8c96a;--gold-dim:#3d2e0a;
+  --gold:#b8922a;--gold2:#ddb84a;--gold-dim:#2e1e05;
   --red:#8b2020;--red2:#c44040;--red-t:#f09090;--red-bg:#1a0808;
   --green:#1a4a1a;--green2:#3a8a3a;--green-t:#80c880;--green-bg:#081408;
   --blue:#1a2a4a;--blue2:#3a6aaa;--blue-t:#90c0f0;--blue-bg:#080d18;
@@ -246,7 +246,7 @@ canvas.chart{width:100%!important;height:130px!important}
     <div class="legend">
       <span class="leg"><span style="color:#c44040;font-size:9px">◆</span> Offen</span>
       <span class="leg"><span style="color:#3a8a3a;font-size:9px">◆</span> 1× gemacht</span>
-      <span class="leg"><span style="color:#c9a84c;font-size:9px">◆</span> 2× erledigt</span>
+      <span class="leg"><span style="color:#b8922a;font-size:9px">◆</span> 2× erledigt</span>
     </div>
     <div class="section-hint">Übung antippen → Training eintragen</div>
     <div class="chips" id="week-chips"></div>
@@ -348,6 +348,33 @@ canvas.chart{width:100%!important;height:130px!important}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // ── Audio ────────────────────────────────────────────────────
+function playTriple(){
+  // "uuuh" wobbly sound for 3+ times
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(440,ctx.currentTime);
+    o.frequency.linearRampToValueAtTime(500,ctx.currentTime+.08);
+    o.frequency.linearRampToValueAtTime(420,ctx.currentTime+.16);
+    o.frequency.linearRampToValueAtTime(480,ctx.currentTime+.24);
+    o.frequency.linearRampToValueAtTime(440,ctx.currentTime+.32);
+    g.gain.setValueAtTime(.15,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.5);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+.5);
+  }catch(e){}
+}
+function spawnRainbow(el){
+  const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const gems=['✦','★','◆','✧','⬥','★','✦'];
+  const colors=['#ff6060','#ffaa40','#ffee40','#60ff80','#40aaff','#aa60ff','#ff60aa'];
+  gems.forEach((g,i)=>{
+    const s=document.createElement('div');s.className='sparkle';s.textContent=g;
+    s.style.cssText=`left:${cx+(Math.random()-.5)*100}px;top:${cy+(Math.random()-.5)*50}px;color:${colors[i]};font-size:${12+Math.random()*12}px;animation-delay:${i*.06}s`;
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1100);
+  });
+}
 function playPickup(){
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -376,7 +403,7 @@ function playLevelup(){
 function spawnSparkles(el,gold){
   const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
   const gems=gold?['✦','★','◆','✦','★','◆','✧']:['✦','✧','◆','⬥','✦','✧'];
-  const colors=gold?['#e8c96a','#c9a84c','#fff8dc']:['#c9a84c','#e8c96a','#80c880'];
+  const colors=gold?['#ddb84a','#b8922a','#fff8dc']:['#b8922a','#ddb84a','#80c880'];
   gems.forEach((g,i)=>{
     const s=document.createElement('div');s.className='sparkle';s.textContent=g;
     s.style.cssText=`left:${cx+(Math.random()-.5)*80}px;top:${cy+(Math.random()-.5)*40}px;color:${colors[i%colors.length]};font-size:${10+Math.random()*10}px;animation-delay:${i*.07}s`;
@@ -402,7 +429,7 @@ const RANKS=[
   {min:.26,title:'Stählerner Wille',      fogColor:'rgba(10,20,40,.4)', starCount:100, xpColor:'#4080c0'},
   {min:.51,title:'Unerbittlicher',        fogColor:'rgba(20,30,10,.4)', starCount:140, xpColor:'#60a060'},
   {min:.76,title:'Meister der Disziplin', fogColor:'rgba(40,30,5,.4)',  starCount:180, xpColor:'#c09040'},
-  {min:1,  title:'Legende dieser Woche',  fogColor:'rgba(40,30,5,.3)',  starCount:220, xpColor:'#e8c96a'},
+  {min:1,  title:'Legende dieser Woche',  fogColor:'rgba(40,30,5,.3)',  starCount:220, xpColor:'#ddb84a'},
 ];
 
 let lastRankIdx=-1;
@@ -426,7 +453,7 @@ function updateAtmosphere(pct){
 
   // Rank title
   document.getElementById('rank-title').textContent=rank.title;
-  document.getElementById('rank-title').style.color=pct>=1?'#e8c96a':pct>=.5?'#c9a84c':'#8090b0';
+  document.getElementById('rank-title').style.color=pct>=1?'#ddb84a':pct>=.5?'#b8922a':'#8090b0';
 
   // Fog
   const fc=rank.fogColor;
@@ -447,7 +474,7 @@ function updateAtmosphere(pct){
   const runeEl=document.getElementById('rune-top');
   if(runeEl){
     const glowStrength=Math.round(pct*12);
-    runeEl.style.color=pct>=1?'#e8c96a':pct>=.5?'#c9a84c':'#2a3550';
+    runeEl.style.color=pct>=1?'#ddb84a':pct>=.5?'#b8922a':'#2a3550';
     runeEl.style.textShadow=pct>.1?`0 0 ${glowStrength}px ${rank.xpColor}`:'none';
   }
 
@@ -552,19 +579,35 @@ function getExType(name){const ex=state.pool.find(p=>p.name===name);return ex?ex
 // ── Satz rows ────────────────────────────────────────────────
 function buildSatzRows(){
   const count=parseInt(document.getElementById('f-s-count').value)||0;
-  const container=document.getElementById('satz-rows');container.innerHTML='';
+  const container=document.getElementById('satz-rows');
+  // save existing values
+  const existing=[];
+  container.querySelectorAll('.satz-row').forEach(row=>{
+    existing.push({reps:row.querySelector('.satz-reps').value,weight:row.querySelector('.satz-weight').value});
+  });
+  container.innerHTML='';
   for(let i=0;i<Math.min(count,10);i++){
     const row=document.createElement('div');row.className='satz-row';
     row.innerHTML=`<span class="satz-nr">Satz ${i+1}</span>
       <div class="field-group"><span class="field-label">Wdh.</span><input class="field-input satz-reps" type="number" placeholder="z.B. 10" min="0" style="width:100%"></div>
       <div class="field-group"><span class="field-label">Gewicht (kg)</span><input class="field-input satz-weight" type="number" placeholder="optional" min="0" step="0.5" style="width:100%"></div>`;
     container.appendChild(row);
+    // restore saved values
+    if(existing[i]){
+      if(existing[i].reps)row.querySelector('.satz-reps').value=existing[i].reps;
+      if(existing[i].weight)row.querySelector('.satz-weight').value=existing[i].weight;
+    }
     if(i===0){
       row.querySelector('.satz-weight').addEventListener('input',function(){
         const w=this.value;
         container.querySelectorAll('.satz-weight').forEach((el,idx)=>{if(idx>0&&!el.value)el.value=w;});
       });
     }
+  }
+  // if new rows added, propagate first weight to empty new ones
+  const firstWeight=container.querySelector('.satz-weight')?.value;
+  if(firstWeight){
+    container.querySelectorAll('.satz-weight').forEach((el,idx)=>{if(idx>0&&!el.value)el.value=firstWeight;});
   }
   document.getElementById('satz-hint').textContent=count>0?`${count} Satz${count>1?'e':''} – Gewicht bei Satz 1 wird automatisch übernommen`:'';
 }
@@ -600,12 +643,19 @@ function handleSimpleTap(name,chipEl){
     if(!state.logs[name])state.logs[name]=[];
     state.logs[name].push({date:todayStr(),type:'simple'});
     state.logs[name].sort((a,b)=>a.date.localeCompare(b.date));
-    playPickup();
+    const newCount=weekLogs.length+1;
     chipEl.classList.add('pickup');
-    spawnSparkles(chipEl,weekLogs.length+1>=2);
     setTimeout(()=>chipEl.classList.remove('pickup'),500);
+    if(newCount>=3){playTriple();spawnRainbow(chipEl);}
+    else if(newCount===2){playPickup();spawnSparkles(chipEl,true);}
+    else{playPickup();spawnSparkles(chipEl,false);}
   }
   scheduleSave();render();
+}
+
+function checkTriple(name,chipEl){
+  const c=getWeekCount(name);
+  if(c>2){playTriple();spawnRainbow(chipEl);}
 }
 
 function saveLog(){
@@ -632,12 +682,18 @@ function saveLog(){
   if(!state.logs[name])state.logs[name]=[];
   state.logs[name].push(entry);
   state.logs[name].sort((a,b)=>a.date.localeCompare(b.date));
-  scheduleSave();playPickup();renderLogList(name);renderChart(name);render();
+  scheduleSave();renderLogList(name);renderChart(name);render();
   closeModal();
   setTimeout(()=>{
     const c=getWeekCount(name);
     document.querySelectorAll('.ex-chip').forEach(chip=>{
-      if(chip.dataset.name===name){chip.classList.add('pickup');spawnSparkles(chip,c>=2);setTimeout(()=>chip.classList.remove('pickup'),500);}
+      if(chip.dataset.name===name){
+        chip.classList.add('pickup');
+        setTimeout(()=>chip.classList.remove('pickup'),500);
+        if(c>=3){playTriple();spawnRainbow(chip);}
+        else if(c===2){playPickup();spawnSparkles(chip,true);}
+        else{playPickup();spawnSparkles(chip,false);}
+      }
     });
   },50);
 }
@@ -689,7 +745,7 @@ function renderChart(name){
   empty.style.display='none';canvas.style.display='';
   if(chartInstance)chartInstance.destroy();
   chartInstance=new Chart(canvas,{type:'line',
-    data:{datasets:[{data:pts,borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,.07)',borderWidth:1.5,pointBackgroundColor:'#c9a84c',pointRadius:3,tension:.3,fill:true}]},
+    data:{datasets:[{data:pts,borderColor:'#b8922a',backgroundColor:'rgba(184,146,42,.07)',borderWidth:1.5,pointBackgroundColor:'#b8922a',pointRadius:3,tension:.3,fill:true}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y}`}}},
       scales:{x:{type:'category',ticks:{color:'#5a6580',font:{size:10}},grid:{color:'#1e2535'}},y:{ticks:{color:'#5a6580',font:{size:10}},grid:{color:'#1e2535'},beginAtZero:false}}}});
@@ -717,11 +773,16 @@ function render(){
   document.getElementById('wlabel').textContent=wLabel(wo);
   const pool=state.pool,today=todayStr(),weekDates=getWeekDates(wo);
 
-  // Progress
+  // Progress formula:
+  // Each exercise done 1x = 1 point, 2x = 2 points
+  // Max score = all 1x (pool.length) + half the pool 2x (pool.length/2)
+  // 100% = all done once + half done twice
   const total=pool.length;
-  const done=pool.filter(ex=>getWeekCount(ex.name)>=1).length;
-  const pct=total>0?done/total:0;
-  if(pct!==lastPct){updateAtmosphere(pct);lastPct=pct;}
+  const maxScore=total+Math.ceil(total/2);
+  let scoreSum=0;
+  pool.forEach(ex=>{const c=getWeekCount(ex.name);if(c>=2)scoreSum+=2;else if(c===1)scoreSum+=1;});
+  const pct=total>0?Math.min(1,scoreSum/maxScore):0;
+  if(Math.abs(pct-lastPct)>.001){updateAtmosphere(pct);lastPct=pct;}
 
   // Calendar
   const cal=document.getElementById('week-calendar');cal.innerHTML='';
