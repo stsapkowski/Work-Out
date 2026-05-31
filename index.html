@@ -25,237 +25,66 @@
   --done-bg: #0d1f06;
   --done-border: #3B6D11;
   --done-text: #97C459;
-  --accent: #97C459;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  min-height: 100vh;
-  padding: 2rem 1rem;
-}
-
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; padding: 2rem 1rem; }
 .container { max-width: 560px; margin: 0 auto; }
-
 header { margin-bottom: 2.5rem; }
-
-h1 {
-  font-family: 'DM Mono', monospace;
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--muted);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.week-display {
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.week-nav-btn {
-  background: none;
-  border: 0.5px solid var(--border2);
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 14px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-family: 'DM Mono', monospace;
-}
+h1 { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+.week-display { font-size: 22px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 12px; }
+.week-nav-btn { background: none; border: 0.5px solid var(--border2); color: var(--muted); cursor: pointer; font-size: 14px; padding: 4px 10px; border-radius: 4px; font-family: 'DM Mono', monospace; }
 .week-nav-btn:hover { border-color: var(--dim); color: var(--text); }
-
-.urgency {
-  margin-top: 10px;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: .04em;
-  padding: 6px 10px;
-  border-radius: 4px;
-  border-left: 2px solid;
-}
+.urgency { margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .04em; padding: 6px 10px; border-radius: 4px; border-left: 2px solid; }
 .u-ok { background: var(--done-bg); border-color: var(--done-border); color: var(--done-text); }
 .u-warn { background: var(--half-bg); border-color: var(--half-border); color: var(--half-text); }
 .u-crit { background: var(--none-bg); border-color: var(--none-border); color: var(--none-text); }
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin: 1.5rem 0;
-}
-
-.stat {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: 6px;
-  padding: 10px 12px;
-}
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 1.5rem 0; }
+.stat { background: var(--surface); border: 0.5px solid var(--border); border-radius: 6px; padding: 10px 12px; }
 .stat-label { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
 .stat-val { font-size: 24px; font-weight: 500; margin-top: 2px; }
 .stat-val.none-color { color: var(--none-text); }
 .stat-val.half-color { color: var(--half-text); }
 .stat-val.done-color { color: var(--done-text); }
-
-.section-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
+.section-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
-
-.chip {
-  font-size: 13px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 0.5px solid;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 400;
-  transition: transform .1s, opacity .1s;
-}
+.chip { font-size: 13px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: transform .1s; }
 .chip:active { transform: scale(0.96); }
 .chip-none { background: var(--none-bg); border-color: var(--none-border); color: var(--none-text); }
 .chip-half { background: var(--half-bg); border-color: var(--half-border); color: var(--half-text); }
 .chip-done { background: var(--done-bg); border-color: var(--done-border); color: var(--done-text); }
 .chip-pool { background: var(--surface); border-color: var(--border2); color: var(--text); }
 .chip-pool:hover { border-color: var(--dim); }
-
-.badge {
-  font-size: 10px;
-  font-family: 'DM Mono', monospace;
-  background: rgba(255,255,255,.07);
-  border-radius: 20px;
-  padding: 1px 6px;
-}
-
-.divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
-
-.tabs {
-  display: flex;
-  border: 0.5px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-.tab {
-  flex: 1;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 13px;
-  padding: 8px;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-}
+.badge { font-size: 10px; font-family: 'DM Mono', monospace; background: rgba(255,255,255,.07); border-radius: 20px; padding: 1px 6px; }
+.tabs { display: flex; border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem; }
+.tab { flex: 1; background: none; border: none; color: var(--muted); font-size: 13px; padding: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .tab.active { background: var(--surface2); color: var(--text); font-weight: 500; }
 .tab:hover:not(.active) { color: var(--text); }
-
 .add-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.add-row input {
-  flex: 1; min-width: 160px;
-  background: var(--surface);
-  border: 0.5px solid var(--border2);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  padding: 7px 12px;
-  border-radius: 6px;
-  outline: none;
-}
+.add-row input { flex: 1; min-width: 160px; background: var(--surface); border: 0.5px solid var(--border2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 7px 12px; border-radius: 6px; outline: none; }
 .add-row input:focus { border-color: var(--dim); }
 .add-row input::placeholder { color: var(--muted); }
-.add-row button, .btn {
-  background: none;
-  border: 0.5px solid var(--border2);
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  padding: 7px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  white-space: nowrap;
-  letter-spacing: .03em;
-}
+.add-row button, .btn { background: none; border: 0.5px solid var(--border2); color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; padding: 7px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; letter-spacing: .03em; }
 .add-row button:hover, .btn:hover { border-color: var(--dim); }
-
-.sync-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 1.5rem;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-}
+.sync-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--done-border); flex-shrink: 0; }
 .sdot.err { background: var(--none-border); }
 .sdot.loading { background: var(--half-border); animation: pulse 1s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 1rem;
-}
-.leg {
-  font-size: 11px;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: 'DM Mono', monospace;
-}
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
+.leg { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; }
 .leg-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-.help-text { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; letter-spacing: .02em; }
-
-.config-box {
-  background: var(--surface);
-  border: 0.5px solid var(--border2);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 1.5rem;
-}
+.help-text { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; }
+.config-box { background: var(--surface); border: 0.5px solid var(--border2); border-radius: 8px; padding: 16px; margin-bottom: 1.5rem; }
 .config-box p { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.6; }
-.config-box a { color: var(--half-text); }
 .config-input-row { display: flex; gap: 8px; flex-wrap: wrap; }
-.config-input-row input {
-  flex: 1; min-width: 200px;
-  background: var(--bg);
-  border: 0.5px solid var(--border2);
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  padding: 7px 12px;
-  border-radius: 6px;
-  outline: none;
-}
+.config-input-row input { flex: 1; min-width: 200px; background: var(--bg); border: 0.5px solid var(--border2); color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; padding: 7px 12px; border-radius: 6px; outline: none; }
 .config-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
-
 .empty { font-size: 13px; color: var(--muted); padding: 6px 0; font-style: italic; }
 </style>
 </head>
 <body>
 <div class="container">
-
   <header>
     <h1>Workout Tracker</h1>
     <div class="week-display">
@@ -278,7 +107,6 @@ h1 {
     <button class="tab" onclick="setTab('pool')">Übungspool</button>
   </div>
 
-  <!-- WEEK VIEW -->
   <div id="view-week">
     <div class="stats">
       <div class="stat"><div class="stat-label">Fehlt</div><div class="stat-val none-color" id="s-none">0</div></div>
@@ -295,7 +123,6 @@ h1 {
     <div class="empty" id="week-empty" style="display:none">Noch keine Übungen. Füge welche im Tab "Übungspool" hinzu.</div>
   </div>
 
-  <!-- POOL VIEW -->
   <div id="view-pool" style="display:none">
     <div class="section-label">Dein Übungspool</div>
     <div class="chips" id="pool-chips" style="margin-top:8px"></div>
@@ -307,11 +134,10 @@ h1 {
     <p class="help-text">Rechtsklick auf eine Übung = löschen</p>
   </div>
 
-  <!-- SETTINGS VIEW -->
   <div id="view-settings" style="display:none">
     <div class="config-box">
       <div class="config-label">Google OAuth Client-ID</div>
-      <p>Damit deine Daten geräteübergreifend in Google Drive gespeichert werden, gibst du hier deine Client-ID ein.</p>
+      <p>Deine Client-ID aus der Google Cloud Console.</p>
       <div class="config-input-row">
         <input type="text" id="client-id-input" placeholder="xxxxxxxx.apps.googleusercontent.com">
         <button onclick="saveClientId()">Speichern</button>
@@ -331,15 +157,18 @@ h1 {
       <button class="btn" onclick="exportData()">↓ Export</button>
     </div>
   </div>
-
 </div>
 
-<!-- New Google Identity Services -->
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
 const FILE_NAME = 'workout_tracker_data.json';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const LS_STATE = 'wt_local';
+const LS_CLIENT = 'wt_client_id';
+const LS_TOKEN = 'wt_access_token';
+const LS_TOKEN_EXP = 'wt_token_exp';
+
 let state = { pool: [], weeks: {} };
 let fileId = null;
 let wo = 0;
@@ -349,40 +178,76 @@ let gapiInited = false;
 let gisInited = false;
 let saveTimer = null;
 
-function getClientId() { return localStorage.getItem('wt_client_id') || ''; }
+// ── Helpers ─────────────────────────────────────────────────
+function getClientId() { return localStorage.getItem(LS_CLIENT) || ''; }
 
 function saveClientId() {
   const v = document.getElementById('client-id-input').value.trim();
   if (!v) return;
-  localStorage.setItem('wt_client_id', v);
+  localStorage.setItem(LS_CLIENT, v);
+  // clear old token so fresh login happens
+  localStorage.removeItem(LS_TOKEN);
+  localStorage.removeItem(LS_TOKEN_EXP);
   setSyncStatus('loading', 'Client-ID gespeichert – lade APIs...');
   initAll();
 }
 
-// ── Init both APIs ──────────────────────────────────────────
+function setSyncStatus(status, msg) {
+  document.getElementById('sdot').className = 'sdot' + (status === 'err' ? ' err' : status === 'loading' ? ' loading' : '');
+  document.getElementById('smsg').textContent = msg;
+}
+
+function updateSettingsStatus() {
+  const el = document.getElementById('settings-status');
+  if (!getClientId()) { el.textContent = 'Keine Client-ID eingetragen.'; return; }
+  el.textContent = accessToken ? 'Verbunden mit Google Drive ✓' : 'Nicht angemeldet.';
+}
+
+// ── Token persistence ────────────────────────────────────────
+function saveToken(token, expiresIn) {
+  accessToken = token;
+  const exp = Date.now() + (expiresIn - 60) * 1000; // 1 min buffer
+  localStorage.setItem(LS_TOKEN, token);
+  localStorage.setItem(LS_TOKEN_EXP, exp);
+}
+
+function loadSavedToken() {
+  const token = localStorage.getItem(LS_TOKEN);
+  const exp = parseInt(localStorage.getItem(LS_TOKEN_EXP) || '0');
+  if (token && Date.now() < exp) {
+    accessToken = token;
+    return true;
+  }
+  localStorage.removeItem(LS_TOKEN);
+  localStorage.removeItem(LS_TOKEN_EXP);
+  return false;
+}
+
+function clearToken() {
+  accessToken = null;
+  localStorage.removeItem(LS_TOKEN);
+  localStorage.removeItem(LS_TOKEN_EXP);
+}
+
+// ── GAPI + GIS init ──────────────────────────────────────────
 function initAll() {
   const cid = getClientId();
   if (!cid) { setSyncStatus('err', 'Keine Client-ID – bitte in ⚙ eintragen'); return; }
-  // Load gapi client
+
   gapi.load('client', async () => {
     await gapi.client.init({
       discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
     });
     gapiInited = true;
-    maybeEnableButtons();
+    checkReady();
   });
-}
 
-// Called by GIS library when ready
-function gisLoaded() {
-  const cid = getClientId();
-  if (!cid) return;
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: cid,
     scope: SCOPES,
     callback: async (resp) => {
       if (resp.error) { setSyncStatus('err', 'Login fehlgeschlagen: ' + resp.error); return; }
-      accessToken = resp.access_token;
+      saveToken(resp.access_token, resp.expires_in || 3600);
       gapi.client.setToken({ access_token: accessToken });
       setSyncStatus('loading', 'Lade Daten...');
       await loadData();
@@ -390,39 +255,44 @@ function gisLoaded() {
     }
   });
   gisInited = true;
-  maybeEnableButtons();
+  checkReady();
 }
 
-function maybeEnableButtons() {
-  if (gapiInited && gisInited) {
+async function checkReady() {
+  if (!gapiInited || !gisInited) return;
+  // Try saved token first
+  if (loadSavedToken()) {
+    gapi.client.setToken({ access_token: accessToken });
+    setSyncStatus('loading', 'Lade Daten...');
+    try {
+      await loadData();
+      updateSettingsStatus();
+    } catch(e) {
+      // Token might be expired server-side, clear and ask to login
+      clearToken();
+      setSyncStatus('err', 'Session abgelaufen – bitte neu anmelden');
+      updateSettingsStatus();
+    }
+  } else {
     setSyncStatus('err', 'Nicht angemeldet – bitte "Mit Google anmelden" klicken');
     updateSettingsStatus();
   }
 }
 
 function signIn() {
-  if (!tokenClient) { setSyncStatus('err', 'API noch nicht bereit – kurz warten'); return; }
-  tokenClient.requestAccessToken({ prompt: 'consent' });
+  if (!tokenClient) { setSyncStatus('err', 'API noch nicht bereit'); return; }
+  tokenClient.requestAccessToken({ prompt: '' });
 }
 
 function signOut() {
-  if (accessToken) {
-    google.accounts.oauth2.revoke(accessToken);
-    accessToken = null;
-    gapi.client.setToken(null);
-  }
+  if (accessToken) google.accounts.oauth2.revoke(accessToken);
+  clearToken();
+  gapi.client.setToken(null);
   setSyncStatus('err', 'Abgemeldet');
   updateSettingsStatus();
 }
 
-function updateSettingsStatus() {
-  const el = document.getElementById('settings-status');
-  if (!getClientId()) { el.textContent = 'Keine Client-ID eingetragen.'; return; }
-  if (accessToken) { el.textContent = 'Verbunden mit Google Drive ✓'; }
-  else { el.textContent = 'Nicht angemeldet.'; }
-}
-
-// ── Drive ───────────────────────────────────────────────────
+// ── Drive ────────────────────────────────────────────────────
 async function findOrCreateFile() {
   const res = await gapi.client.drive.files.list({
     q: `name='${FILE_NAME}' and trashed=false`,
@@ -430,21 +300,10 @@ async function findOrCreateFile() {
   });
   const files = res.result.files;
   if (files && files.length > 0) { fileId = files[0].id; return; }
-  const boundary = 'wt_boundary';
-  const body = [
-    `--${boundary}`,
-    'Content-Type: application/json',
-    '',
-    JSON.stringify({ name: FILE_NAME, mimeType: 'application/json' }),
-    `--${boundary}`,
-    'Content-Type: application/json',
-    '',
-    JSON.stringify(state),
-    `--${boundary}--`
-  ].join('\r\n');
+  const boundary = 'wt_b';
+  const body = `--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({name:FILE_NAME,mimeType:'application/json'})}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(state)}\r\n--${boundary}--`;
   const r = await gapi.client.request({
-    path: '/upload/drive/v3/files',
-    method: 'POST',
+    path: '/upload/drive/v3/files', method: 'POST',
     params: { uploadType: 'multipart', fields: 'id' },
     headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
     body
@@ -453,21 +312,19 @@ async function findOrCreateFile() {
 }
 
 async function loadData() {
-  try {
-    await findOrCreateFile();
-    const r = await gapi.client.drive.files.get({ fileId, alt: 'media' });
-    const parsed = typeof r.result === 'string' ? JSON.parse(r.result) : r.result;
-    if (parsed && parsed.pool) state = parsed;
-    setSyncStatus('ok', 'Verbunden mit Google Drive ✓');
-    render();
-  } catch(e) { setSyncStatus('err', 'Ladefehler: ' + e.message); }
+  await findOrCreateFile();
+  const r = await gapi.client.drive.files.get({ fileId, alt: 'media' });
+  const parsed = typeof r.result === 'string' ? JSON.parse(r.result) : r.result;
+  if (parsed && parsed.pool) state = parsed;
+  try { localStorage.setItem(LS_STATE, JSON.stringify(state)); } catch(e) {}
+  setSyncStatus('ok', 'Verbunden mit Google Drive ✓');
+  render();
 }
 
 async function saveToDrive() {
   if (!fileId || !accessToken) return;
   await gapi.client.request({
-    path: `/upload/drive/v3/files/${fileId}`,
-    method: 'PATCH',
+    path: `/upload/drive/v3/files/${fileId}`, method: 'PATCH',
     params: { uploadType: 'media' },
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(state)
@@ -482,7 +339,7 @@ async function syncNow() {
 }
 
 function scheduleSave() {
-  try { localStorage.setItem('wt_local', JSON.stringify(state)); } catch(e) {}
+  try { localStorage.setItem(LS_STATE, JSON.stringify(state)); } catch(e) {}
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
     if (!accessToken) return;
@@ -492,121 +349,103 @@ function scheduleSave() {
   }, 800);
 }
 
-function setSyncStatus(status, msg) {
-  const dot = document.getElementById('sdot');
-  const sm = document.getElementById('smsg');
-  dot.className = 'sdot' + (status === 'err' ? ' err' : status === 'loading' ? ' loading' : '');
-  sm.textContent = msg;
-}
-
 function exportData() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'workout_backup.json'; a.click();
 }
 
-// ── State / UI ──────────────────────────────────────────────
+// ── State / UI ───────────────────────────────────────────────
 function wk(o) {
   const d = new Date(); const day = d.getDay();
-  const diff = d.getDate() - (day === 0 ? 6 : day - 1);
-  d.setDate(diff + o * 7); d.setHours(0,0,0,0);
-  return d.toISOString().slice(0,10);
+  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1) + o * 7);
+  d.setHours(0,0,0,0); return d.toISOString().slice(0,10);
 }
 function wLabel(o) {
-  const m = new Date(wk(o)); const e = new Date(m); e.setDate(m.getDate() + 6);
-  const f = d => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-  if (o === 0) return `${f(m)} – ${f(e)}`;
-  if (o === -1) return `Letzte Woche`;
-  if (o === 1) return `Nächste Woche`;
+  const m = new Date(wk(o)); const e = new Date(m); e.setDate(m.getDate()+6);
+  const f = d => d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
+  if (o===0) return `${f(m)} – ${f(e)}`;
+  if (o===-1) return `Letzte Woche`;
+  if (o===1) return `Nächste Woche`;
   return `${f(m)} – ${f(e)}`;
 }
-function getWC() { const k = wk(wo); if (!state.weeks[k]) state.weeks[k] = {}; return state.weeks[k]; }
-function daysLeft() { const d = new Date().getDay(); return d === 0 ? 0 : 7 - d; }
-
-function cycleEx(name) { const wc = getWC(); wc[name] = ((wc[name] || 0) + 1) % 3; scheduleSave(); render(); }
+function getWC() { const k=wk(wo); if(!state.weeks[k]) state.weeks[k]={}; return state.weeks[k]; }
+function daysLeft() { const d=new Date().getDay(); return d===0?0:7-d; }
+function cycleEx(name) { const wc=getWC(); wc[name]=((wc[name]||0)+1)%3; scheduleSave(); render(); }
 function addToPool() {
-  const inp = document.getElementById('pool-input'); const n = inp.value.trim();
-  if (!n || state.pool.includes(n)) return;
-  state.pool.push(n); inp.value = ''; scheduleSave(); render();
+  const inp=document.getElementById('pool-input'); const n=inp.value.trim();
+  if(!n||state.pool.includes(n)) return;
+  state.pool.push(n); inp.value=''; scheduleSave(); render();
 }
-function removeFromPool(name) { state.pool = state.pool.filter(p => p !== name); scheduleSave(); render(); }
-function cw(d) { wo += d; render(); }
+function removeFromPool(name) { state.pool=state.pool.filter(p=>p!==name); scheduleSave(); render(); }
+function cw(d) { wo+=d; render(); }
 
 function setTab(t) {
-  ['week','pool','settings'].forEach(id => {
-    document.getElementById('view-' + id).style.display = id === t ? '' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach((el, i) => {
-    el.classList.toggle('active', (i === 0 && t === 'week') || (i === 1 && t === 'pool'));
-  });
-  if (t === 'settings') {
-    const ci = document.getElementById('client-id-input');
-    if (ci) ci.value = getClientId();
-    updateSettingsStatus();
-  }
+  ['week','pool','settings'].forEach(id => document.getElementById('view-'+id).style.display = id===t?'':'none');
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active',(i===0&&t==='week')||(i===1&&t==='pool')));
+  if (t==='settings') { document.getElementById('client-id-input').value=getClientId(); updateSettingsStatus(); }
 }
 
 function render() {
   document.getElementById('wlabel').textContent = wLabel(wo);
-  const wc = getWC(); const pool = state.pool;
-  let done = 0, half = 0, none = 0;
-  pool.forEach(n => { const c = wc[n] || 0; if (c >= 2) done++; else if (c === 1) half++; else none++; });
-  document.getElementById('s-done').textContent = done;
-  document.getElementById('s-half').textContent = half;
-  document.getElementById('s-none').textContent = none;
+  const wc=getWC(); const pool=state.pool;
+  let done=0,half=0,none=0;
+  pool.forEach(n=>{const c=wc[n]||0; if(c>=2)done++; else if(c===1)half++; else none++;});
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-half').textContent=half;
+  document.getElementById('s-none').textContent=none;
 
-  const um = document.getElementById('urgency-msg');
-  if (pool.length > 0 && wo === 0) {
-    const left = daysLeft(); const missing = none + half;
-    if (missing === 0) um.innerHTML = `<div class="urgency u-ok">alle übungen diese woche erledigt.</div>`;
-    else if (left <= 1) um.innerHTML = `<div class="urgency u-crit">woche endet bald — noch ${missing} übung${missing > 1 ? 'en' : ''} offen.</div>`;
-    else if (left <= 3) um.innerHTML = `<div class="urgency u-warn">noch ${left} tage — ${missing} übung${missing > 1 ? 'en' : ''} ausstehend.</div>`;
-    else um.innerHTML = `<div class="urgency u-ok">${left} tage übrig, ${missing} übung${missing > 1 ? 'en' : ''} zu erledigen.</div>`;
-  } else { um.innerHTML = ''; }
+  const um=document.getElementById('urgency-msg');
+  if(pool.length>0&&wo===0){
+    const left=daysLeft(); const missing=none+half;
+    if(missing===0) um.innerHTML=`<div class="urgency u-ok">alle übungen diese woche erledigt.</div>`;
+    else if(left<=1) um.innerHTML=`<div class="urgency u-crit">woche endet bald — noch ${missing} übung${missing>1?'en':''} offen.</div>`;
+    else if(left<=3) um.innerHTML=`<div class="urgency u-warn">noch ${left} tage — ${missing} ausstehend.</div>`;
+    else um.innerHTML=`<div class="urgency u-ok">${left} tage übrig, ${missing} übung${missing>1?'en':''} zu erledigen.</div>`;
+  } else { um.innerHTML=''; }
 
-  const wchips = document.getElementById('week-chips');
-  wchips.innerHTML = '';
-  if (pool.length === 0) { document.getElementById('week-empty').style.display = ''; }
+  const wchips=document.getElementById('week-chips'); wchips.innerHTML='';
+  if(pool.length===0){document.getElementById('week-empty').style.display='';}
   else {
-    document.getElementById('week-empty').style.display = 'none';
-    const sorted = [...pool].sort((a, b) => (wc[a] || 0) - (wc[b] || 0));
-    sorted.forEach(name => {
-      const c = wc[name] || 0;
-      const el = document.createElement('button');
-      el.className = 'chip ' + (c >= 2 ? 'chip-done' : c === 1 ? 'chip-half' : 'chip-none');
-      el.innerHTML = `${name}<span class="badge">${c >= 2 ? '2×' : c === 1 ? '1×' : '0×'}</span>`;
-      el.onclick = () => cycleEx(name);
+    document.getElementById('week-empty').style.display='none';
+    [...pool].sort((a,b)=>(wc[a]||0)-(wc[b]||0)).forEach(name=>{
+      const c=wc[name]||0;
+      const el=document.createElement('button');
+      el.className='chip '+(c>=2?'chip-done':c===1?'chip-half':'chip-none');
+      el.innerHTML=`${name}<span class="badge">${c>=2?'2×':c===1?'1×':'0×'}</span>`;
+      el.onclick=()=>cycleEx(name);
       wchips.appendChild(el);
     });
   }
 
-  const pchips = document.getElementById('pool-chips');
-  pchips.innerHTML = '';
-  if (pool.length === 0) { document.getElementById('pool-empty').style.display = ''; }
+  const pchips=document.getElementById('pool-chips'); pchips.innerHTML='';
+  if(pool.length===0){document.getElementById('pool-empty').style.display='';}
   else {
-    document.getElementById('pool-empty').style.display = 'none';
-    pool.forEach(name => {
-      const el = document.createElement('button');
-      el.className = 'chip chip-pool'; el.textContent = name;
-      el.oncontextmenu = e => { e.preventDefault(); removeFromPool(name); };
+    document.getElementById('pool-empty').style.display='none';
+    pool.forEach(name=>{
+      const el=document.createElement('button');
+      el.className='chip chip-pool'; el.textContent=name;
+      el.oncontextmenu=e=>{e.preventDefault();removeFromPool(name);};
       pchips.appendChild(el);
     });
   }
 }
 
-// ── Boot ────────────────────────────────────────────────────
-try { const r = localStorage.getItem('wt_local'); if (r) state = JSON.parse(r); } catch(e) {}
+// ── Boot ─────────────────────────────────────────────────────
+try { const r=localStorage.getItem(LS_STATE); if(r) state=JSON.parse(r); } catch(e) {}
 render();
 
-// Wait for GIS to load then init
 window.addEventListener('load', () => {
-  if (typeof google !== 'undefined' && google.accounts) { gisLoaded(); }
-  else {
-    const script = document.querySelector('script[src*="gsi/client"]');
-    if (script) script.addEventListener('load', gisLoaded);
-  }
   const cid = getClientId();
-  if (cid) initAll();
-  else setSyncStatus('err', 'Keine Client-ID – bitte in ⚙ eintragen');
+  if (!cid) { setSyncStatus('err', 'Keine Client-ID – bitte in ⚙ eintragen'); return; }
+  // Wait for GIS to be available
+  const tryInit = () => {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+      initAll();
+    } else {
+      setTimeout(tryInit, 100);
+    }
+  };
+  tryInit();
 });
 </script>
 </body>
