@@ -184,7 +184,9 @@ canvas.chart{width:100%!important;height:130px!important}
 .chart-empty{font-style:italic;font-size:13px;color:var(--dim);padding:8px 0}
 
 /* ── Knight ── */
-.knight-section{display:grid;grid-template-columns:90px 1fr;gap:12px;margin-bottom:1.5rem;align-items:start}
+.knight-section{display:grid;grid-template-columns:90px 1fr;gap:10px;margin-bottom:1.5rem;align-items:start}
+.calendar-knight-row{display:grid;grid-template-columns:90px 1fr;gap:10px;margin-bottom:1.5rem;align-items:start}
+.calendar-col{display:flex;flex-direction:column;gap:0}
 .knight-sprite{cursor:pointer;position:relative}
 .knight-sprite:hover .knight-svg{filter:brightness(1.15)}
 .knight-dialog{display:flex;flex-direction:column;gap:8px}
@@ -254,80 +256,7 @@ canvas.chart{width:100%!important;height:130px!important}
   </div>
 
 
-  <!-- KNIGHT -->
-  <div class="knight-section">
-    <div class="knight-sprite" onclick="knightTap()">
-      <svg class="knight-svg" width="90" height="130" viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
-        <g class="knight-body">
-          <!-- Shadow -->
-          <ellipse cx="32" cy="88" rx="14" ry="3" fill="#000" opacity=".3"/>
-          <!-- Back leg (far) -->
-          <path d="M28 66 L26 68 L24 82 L28 82 L29 70 Z" fill="#1a2030" stroke="#2a3248" stroke-width=".5"/>
-          <!-- Cape -->
-          <path d="M22 32 Q14 45 16 62 Q18 68 22 66 Q20 52 24 42 Z" fill="#6a1010" stroke="#8b1818" stroke-width=".5"/>
-          <path d="M22 32 Q15 50 18 65 Q19 67 21 66 Q18 54 22 44 Z" fill="#4a0808"/>
-          <!-- Torso - 3/4 angle, slightly turned right -->
-          <g class="knight-chest">
-            <path d="M22 32 L18 34 L17 52 L22 54 L32 54 L38 50 L37 34 L32 32 Z" fill="#243048" stroke="#3a5080" stroke-width=".8"/>
-            <!-- Chest plate lines -->
-            <path d="M22 32 L22 54" stroke="#3a5080" stroke-width=".4" opacity=".6"/>
-            <path d="M18 40 L37 40" stroke="#3a5080" stroke-width=".4" opacity=".5"/>
-            <!-- Rune on chest -->
-            <text x="26" y="46" font-size="6" fill="#b8922a" opacity=".6" font-family="serif">ᚱ</text>
-          </g>
-          <!-- Left pauldron (far shoulder, smaller) -->
-          <path d="M18 32 Q14 30 13 36 Q14 40 18 38 L19 34 Z" fill="#1e2840" stroke="#3a5080" stroke-width=".5"/>
-          <!-- Right pauldron (near shoulder, larger) -->
-          <path d="M32 32 Q38 29 42 33 Q42 39 37 38 L36 34 Z" fill="#243048" stroke="#3a5080" stroke-width=".8"/>
-          <!-- Right arm (near, sword arm, foreshortened toward viewer) -->
-          <path d="M37 36 L40 38 L42 50 L38 52 L36 42 Z" fill="#1e2840" stroke="#2a3a58" stroke-width=".5"/>
-          <!-- Gauntlet right -->
-          <path d="M38 50 L42 50 L43 56 L37 57 Z" fill="#243048" stroke="#3a5080" stroke-width=".5"/>
-          <!-- Sword -->
-          <rect x="41" y="30" width="2.5" height="26" rx="1" fill="#8090a0" stroke="#a0b0c0" stroke-width=".3"/>
-          <rect x="38" y="42" width="9" height="2" rx=".5" fill="#b8922a" stroke="#ddb84a" stroke-width=".3"/>
-          <rect x="41.5" y="27" width="1.5" height="5" rx=".5" fill="#b8922a"/>
-          <!-- Left arm (far, partially hidden) -->
-          <path d="M18 36 L15 40 L16 50 L19 50 L19 40 Z" fill="#1a2030" stroke="#2a3248" stroke-width=".4"/>
-          <!-- Neck -->
-          <path d="M24 26 L22 32 L32 32 L30 26 Z" fill="#1e2840" stroke="#2a3a58" stroke-width=".5"/>
-          <!-- Head - 3/4 angle -->
-          <path d="M20 14 Q18 10 20 6 Q24 1 30 2 Q36 3 38 8 Q40 14 36 20 Q34 24 30 26 Q26 27 23 25 Q20 22 20 14 Z" fill="#2a3a58" stroke="#4060a0" stroke-width=".8"/>
-          <!-- Helmet ridge -->
-          <path d="M24 2 Q27 0 30 2 Q27 1 24 2" stroke="#4060a0" stroke-width="1" fill="none"/>
-          <!-- Visor - 3/4 angle, asymmetric -->
-          <path d="M20 15 Q24 13 30 14 Q34 15 36 17 L35 19 Q31 17 27 17 Q23 17 21 18 Z" fill="#090c14" stroke="#2a3a58" stroke-width=".4"/>
-          <!-- Eyes visible through visor -->
-          <g class="knight-eye-l">
-            <ellipse cx="24" cy="16" rx="2" ry="1.2" fill="#b8922a" opacity=".9"/>
-            <ellipse cx="24" cy="16" rx="1" ry=".8" fill="#ddb84a"/>
-          </g>
-          <g class="knight-eye-r">
-            <ellipse cx="30" cy="15.5" rx="2.2" ry="1.3" fill="#b8922a" opacity=".9"/>
-            <ellipse cx="30" cy="15.5" rx="1.1" ry=".9" fill="#ddb84a"/>
-          </g>
-          <!-- Mouth -->
-          <path class="knight-mouth" d="M23 21 Q26.5 23 30 21" stroke="#4060a0" stroke-width=".8" fill="none" stroke-linecap="round"/>
-          <!-- Plume -->
-          <path d="M28 2 Q22 -2 20 4 Q22 2 26 5" stroke="#c44040" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M28 2 Q24 0 23 6" stroke="#8b1818" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-          <!-- Belt -->
-          <path d="M17 52 L37 52 L38 56 L16 56 Z" fill="#12151e" stroke="#2a3248" stroke-width=".5"/>
-          <rect x="26" y="52" width="5" height="4" rx=".5" fill="#b8922a"/>
-          <!-- Front leg -->
-          <path d="M30 56 L32 58 L34 80 L30 82 L28 70 L28 58 Z" fill="#243048" stroke="#3a5080" stroke-width=".5"/>
-          <!-- Boots -->
-          <path d="M24 80 L28 80 L30 86 L22 86 Z" fill="#1a2030" stroke="#2a3248" stroke-width=".5"/>
-          <path d="M30 80 L34 80 L36 86 L28 86 Z" fill="#1e2840" stroke="#2a3248" stroke-width=".5"/>
-        </g>
-      </svg>
-    </div>
-    <div class="knight-dialog">
-      <div class="knight-name">Ser Aldric, Hüter der Disziplin</div>
-      <div class="knight-bubble-inner" id="knight-text">...</div>
-      <div class="knight-options" id="knight-options"></div>
-    </div>
-  </div>
+
 
   <div class="tabs">
     <button class="tab active" onclick="setTab('week')">Diese Woche</button>
@@ -336,7 +265,92 @@ canvas.chart{width:100%!important;height:130px!important}
 
   <div id="view-week">
     <div class="rune-ornament" id="rune-top">᛫ ᚱ ᚢ ᚾ ᛖ ᚾ ᛫</div>
-    <div class="week-calendar" id="week-calendar"></div>
+    <div class="calendar-knight-row">
+      <!-- KNIGHT -->
+      <div class="knight-sprite" onclick="knightTap()">
+        <svg class="knight-svg" width="88" height="140" viewBox="0 0 56 90" xmlns="http://www.w3.org/2000/svg">
+          <g class="knight-body">
+            <!-- Shadow -->
+            <ellipse cx="30" cy="88" rx="14" ry="3" fill="#000" opacity=".35"/>
+            <!-- Cape back -->
+            <path d="M20 30 Q10 48 13 68 Q15 74 20 72 Q17 56 21 44 Z" fill="#5a0e0e" stroke="#7a1414" stroke-width=".5"/>
+            <!-- Back leg -->
+            <path d="M26 64 L24 66 L23 84 L27 84 L28 68 Z" fill="#191f2e" stroke="#252f44" stroke-width=".5"/>
+            <!-- Boot back -->
+            <path d="M22 82 L27 82 L28 88 L20 88 Z" fill="#14181e" stroke="#1e2430" stroke-width=".4"/>
+            <!-- Torso - 3/4 turned right -->
+            <g class="knight-chest">
+              <path d="M20 30 L16 33 L15 54 L21 56 L33 56 L40 52 L39 33 L33 30 Z" fill="#1e2e48" stroke="#3560a0" stroke-width=".8"/>
+              <path d="M20 30 L20 56" stroke="#3560a0" stroke-width=".4" opacity=".5"/>
+              <path d="M16 42 L39 42" stroke="#3560a0" stroke-width=".4" opacity=".4"/>
+              <path d="M16 48 L39 48" stroke="#3560a0" stroke-width=".3" opacity=".3"/>
+              <!-- chest rune -->
+              <text x="24" y="47" font-size="7" fill="#b8922a" opacity=".7" font-family="serif">ᚱ</text>
+            </g>
+            <!-- Left pauldron (far, smaller) -->
+            <path d="M16 31 Q11 28 10 36 Q11 41 16 39 L17 33 Z" fill="#192438" stroke="#3560a0" stroke-width=".5"/>
+            <path d="M10 34 Q9 36 10 38 L13 37 L13 34 Z" fill="#142030" stroke="#2a4878" stroke-width=".4"/>
+            <!-- Right pauldron (near, larger) -->
+            <path d="M33 30 Q40 27 44 32 Q45 38 40 38 L38 33 Z" fill="#1e2e48" stroke="#3560a0" stroke-width=".8"/>
+            <path d="M44 32 Q46 34 45 37 L42 36 L43 33 Z" fill="#192438" stroke="#2a4878" stroke-width=".5"/>
+            <!-- Left arm (far) -->
+            <path d="M16 36 L13 40 L14 52 L17 52 L18 42 Z" fill="#141c2c" stroke="#1e2840" stroke-width=".4"/>
+            <path d="M13 50 L17 50 L18 56 L12 57 Z" fill="#1a2438" stroke="#2a3850" stroke-width=".4"/>
+            <!-- Right arm (near, sword arm) -->
+            <path d="M39 35 L43 38 L45 52 L40 54 L38 44 Z" fill="#1a2438" stroke="#2a3c58" stroke-width=".5"/>
+            <path d="M40 52 L45 52 L46 58 L39 59 Z" fill="#1e2e48" stroke="#3560a0" stroke-width=".5"/>
+            <!-- Sword -->
+            <rect x="44" y="24" width="2.5" height="30" rx="1" fill="#7090a8" stroke="#90b0c8" stroke-width=".4"/>
+            <rect x="41" y="40" width="10" height="2.2" rx=".6" fill="#b8922a" stroke="#ddb84a" stroke-width=".4"/>
+            <rect x="44.5" y="20" width="1.8" height="6" rx=".6" fill="#b8922a"/>
+            <!-- Belt -->
+            <path d="M15 54 L39 54 L40 59 L14 59 Z" fill="#0e1018" stroke="#1e2430" stroke-width=".5"/>
+            <rect x="25" y="54" width="6" height="5" rx=".6" fill="#b8922a"/>
+            <!-- Neck gorget -->
+            <path d="M22 24 L20 30 L33 30 L31 24 Z" fill="#192438" stroke="#2a4878" stroke-width=".6"/>
+            <!-- HEAD - clearly 3/4, face turned right -->
+            <!-- Skull shape -->
+            <path d="M18 12 Q16 7 19 4 Q23 0 30 1 Q37 2 39 7 Q41 13 38 20 Q36 25 31 27 Q26 28 22 26 Q18 23 18 12 Z" fill="#1e2e48" stroke="#3560a0" stroke-width=".8"/>
+            <!-- Helmet crest/ridge -->
+            <path d="M22 1 Q26 -1 30 1 Q26.5 0 22 1" stroke="#3560a0" stroke-width="1.2" fill="none"/>
+            <!-- Visor - asymmetric for 3/4 -->
+            <path d="M18 13 Q23 11 30 12 Q35 13 38 16 L37 19 Q32 17 27 17 Q22 17 19 18 Z" fill="#080b12" stroke="#1e2840" stroke-width=".5"/>
+            <!-- Eyes - amber glow through visor -->
+            <g class="knight-eye-l">
+              <ellipse cx="23" cy="15" rx="2.2" ry="1.4" fill="#b8922a" opacity=".85"/>
+              <ellipse cx="23" cy="15" rx="1.1" ry=".9" fill="#f0c840"/>
+            </g>
+            <g class="knight-eye-r">
+              <ellipse cx="30.5" cy="14.5" rx="2.5" ry="1.5" fill="#b8922a" opacity=".9"/>
+              <ellipse cx="30.5" cy="14.5" rx="1.3" ry="1" fill="#f0c840"/>
+            </g>
+            <!-- Nose bridge shadow -->
+            <path d="M27 15 L27 19" stroke="#0a0d16" stroke-width=".8" opacity=".5"/>
+            <!-- Mouth -->
+            <path class="knight-mouth" d="M22 22 Q26 24 30 22" stroke="#3a5888" stroke-width=".9" fill="none" stroke-linecap="round"/>
+            <!-- Chin -->
+            <path d="M21 24 Q26 27 30 25" stroke="#2a4070" stroke-width=".6" fill="none" opacity=".5"/>
+            <!-- Plume - flowing right -->
+            <path d="M27 1 Q20 -3 17 4 Q20 1 25 5" stroke="#c44040" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M27 1 Q21 -1 19 5" stroke="#8b1818" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M27 1 Q22 2 21 7" stroke="#e05050" stroke-width="1" fill="none" stroke-linecap="round" opacity=".6"/>
+            <!-- Front leg -->
+            <path d="M29 58 L32 60 L35 84 L30 84 L28 70 L27 60 Z" fill="#1e2e48" stroke="#3560a0" stroke-width=".5"/>
+            <!-- Boot front -->
+            <path d="M28 82 L35 82 L37 88 L26 88 Z" fill="#14181e" stroke="#1e2430" stroke-width=".5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="calendar-col">
+        <div class="week-calendar" id="week-calendar"></div>
+      </div>
+    </div>
+    <!-- Knight dialog box -->
+    <div style="margin-bottom:1rem">
+      <div class="knight-name" style="margin-bottom:4px">Ser Aldric, Hüter der Disziplin</div>
+      <div class="knight-bubble-inner" id="knight-text">...</div>
+      <div class="knight-options" id="knight-options" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
     <div class="orn-divider">⬥ ⬥ ⬥</div>
     <div class="stats">
       <div class="stat s-none"><div class="stat-label">Fehlt</div><div class="stat-val" id="s-none">0</div></div>
