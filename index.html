@@ -6,81 +6,87 @@
 <title>Workout Tracker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
-
 :root {
-  --bg: #0f0f0f;
-  --surface: #1a1a1a;
-  --surface2: #222;
-  --border: #2a2a2a;
-  --border2: #333;
-  --text: #e8e8e0;
-  --muted: #666;
-  --dim: #444;
-  --none-bg: #2a1010;
-  --none-border: #7a1f1f;
-  --none-text: #f09595;
-  --half-bg: #1e1600;
-  --half-border: #7a5500;
-  --half-text: #FAC775;
-  --done-bg: #0d1f06;
-  --done-border: #3B6D11;
-  --done-text: #97C459;
+  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#222;--border:#2a2a2a;--border2:#333;
+  --text:#e8e8e0;--muted:#666;--dim:#444;
+  --none-bg:#2a1010;--none-border:#7a1f1f;--none-text:#f09595;
+  --half-bg:#1e1600;--half-border:#7a5500;--half-text:#FAC775;
+  --done-bg:#0d1f06;--done-border:#3B6D11;--done-text:#97C459;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;padding:2rem 1rem}
+.container{max-width:580px;margin:0 auto}
+header{margin-bottom:2rem}
+h1{font-family:'DM Mono',monospace;font-size:13px;font-weight:400;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.week-display{font-size:22px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:12px}
+.week-nav-btn{background:none;border:0.5px solid var(--border2);color:var(--muted);cursor:pointer;font-size:14px;padding:4px 10px;border-radius:4px;font-family:'DM Mono',monospace}
+.week-nav-btn:hover{border-color:var(--dim);color:var(--text)}
+.urgency{margin-top:10px;font-family:'DM Mono',monospace;font-size:11px;padding:6px 10px;border-radius:4px;border-left:2px solid}
+.u-ok{background:var(--done-bg);border-color:var(--done-border);color:var(--done-text)}
+.u-warn{background:var(--half-bg);border-color:var(--half-border);color:var(--half-text)}
+.u-crit{background:var(--none-bg);border-color:var(--none-border);color:var(--none-text)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1.5rem 0}
+.stat{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px}
+.stat-label{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-family:'DM Mono',monospace}
+.stat-val{font-size:24px;font-weight:500;margin-top:2px}
+.stat-val.none-color{color:var(--none-text)}.stat-val.half-color{color:var(--half-text)}.stat-val.done-color{color:var(--done-text)}
+.section-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}
+.chip{font-size:13px;padding:5px 12px;border-radius:20px;border:0.5px solid;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-weight:400;transition:transform .1s}
+.chip:active{transform:scale(0.96)}
+.chip-none{background:var(--none-bg);border-color:var(--none-border);color:var(--none-text)}
+.chip-half{background:var(--half-bg);border-color:var(--half-border);color:var(--half-text)}
+.chip-done{background:var(--done-bg);border-color:var(--done-border);color:var(--done-text)}
+.chip-pool{background:var(--surface);border-color:var(--border2);color:var(--text)}
+.chip-pool:hover{border-color:var(--dim)}
+.chip-detail{background:transparent;border-color:var(--border2);color:var(--muted);font-size:11px;padding:3px 8px;border-radius:20px;cursor:pointer;font-family:'DM Mono',monospace}
+.chip-detail:hover{color:var(--text);border-color:var(--dim)}
+.badge{font-size:10px;font-family:'DM Mono',monospace;background:rgba(255,255,255,.07);border-radius:20px;padding:1px 6px}
+.tabs{display:flex;border:0.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.5rem}
+.tab{flex:1;background:none;border:none;color:var(--muted);font-size:13px;padding:8px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.tab.active{background:var(--surface2);color:var(--text);font-weight:500}
+.tab:hover:not(.active){color:var(--text)}
+.add-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.add-row input,.field-input{flex:1;min-width:120px;background:var(--surface);border:0.5px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:7px 12px;border-radius:6px;outline:none}
+.add-row input:focus,.field-input:focus{border-color:var(--dim)}
+.add-row input::placeholder,.field-input::placeholder{color:var(--muted)}
+.add-row button,.btn{background:none;border:0.5px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;letter-spacing:.03em}
+.add-row button:hover,.btn:hover{border-color:var(--dim)}
+.sync-bar{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--done-border);flex-shrink:0}
+.sdot.err{background:var(--none-border)}.sdot.loading{background:var(--half-border);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1rem}
+.leg{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace}
+.leg-dot{width:6px;height:6px;border-radius:50%}
+.help-text{font-size:11px;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace}
+.config-box{background:var(--surface);border:0.5px solid var(--border2);border-radius:8px;padding:16px;margin-bottom:1.5rem}
+.config-box p{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.6}
+.config-input-row{display:flex;gap:8px;flex-wrap:wrap}
+.config-input-row input{flex:1;min-width:200px;background:var(--bg);border:0.5px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:7px 12px;border-radius:6px;outline:none}
+.config-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.empty{font-size:13px;color:var(--muted);padding:6px 0;font-style:italic}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; padding: 2rem 1rem; }
-.container { max-width: 560px; margin: 0 auto; }
-header { margin-bottom: 2.5rem; }
-h1 { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
-.week-display { font-size: 22px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 12px; }
-.week-nav-btn { background: none; border: 0.5px solid var(--border2); color: var(--muted); cursor: pointer; font-size: 14px; padding: 4px 10px; border-radius: 4px; font-family: 'DM Mono', monospace; }
-.week-nav-btn:hover { border-color: var(--dim); color: var(--text); }
-.urgency { margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .04em; padding: 6px 10px; border-radius: 4px; border-left: 2px solid; }
-.u-ok { background: var(--done-bg); border-color: var(--done-border); color: var(--done-text); }
-.u-warn { background: var(--half-bg); border-color: var(--half-border); color: var(--half-text); }
-.u-crit { background: var(--none-bg); border-color: var(--none-border); color: var(--none-text); }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 1.5rem 0; }
-.stat { background: var(--surface); border: 0.5px solid var(--border); border-radius: 6px; padding: 10px 12px; }
-.stat-label { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-.stat-val { font-size: 24px; font-weight: 500; margin-top: 2px; }
-.stat-val.none-color { color: var(--none-text); }
-.stat-val.half-color { color: var(--half-text); }
-.stat-val.done-color { color: var(--done-text); }
-.section-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
-.chip { font-size: 13px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Sans', sans-serif; font-weight: 400; transition: transform .1s; }
-.chip:active { transform: scale(0.96); }
-.chip-none { background: var(--none-bg); border-color: var(--none-border); color: var(--none-text); }
-.chip-half { background: var(--half-bg); border-color: var(--half-border); color: var(--half-text); }
-.chip-done { background: var(--done-bg); border-color: var(--done-border); color: var(--done-text); }
-.chip-pool { background: var(--surface); border-color: var(--border2); color: var(--text); }
-.chip-pool:hover { border-color: var(--dim); }
-.badge { font-size: 10px; font-family: 'DM Mono', monospace; background: rgba(255,255,255,.07); border-radius: 20px; padding: 1px 6px; }
-.tabs { display: flex; border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem; }
-.tab { flex: 1; background: none; border: none; color: var(--muted); font-size: 13px; padding: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.tab.active { background: var(--surface2); color: var(--text); font-weight: 500; }
-.tab:hover:not(.active) { color: var(--text); }
-.add-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.add-row input { flex: 1; min-width: 160px; background: var(--surface); border: 0.5px solid var(--border2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 7px 12px; border-radius: 6px; outline: none; }
-.add-row input:focus { border-color: var(--dim); }
-.add-row input::placeholder { color: var(--muted); }
-.add-row button, .btn { background: none; border: 0.5px solid var(--border2); color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; padding: 7px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; letter-spacing: .03em; }
-.add-row button:hover, .btn:hover { border-color: var(--dim); }
-.sync-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
-.sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--done-border); flex-shrink: 0; }
-.sdot.err { background: var(--none-border); }
-.sdot.loading { background: var(--half-border); animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
-.leg { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; }
-.leg-dot { width: 6px; height: 6px; border-radius: 50%; }
-.help-text { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; }
-.config-box { background: var(--surface); border: 0.5px solid var(--border2); border-radius: 8px; padding: 16px; margin-bottom: 1.5rem; }
-.config-box p { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.6; }
-.config-input-row { display: flex; gap: 8px; flex-wrap: wrap; }
-.config-input-row input { flex: 1; min-width: 200px; background: var(--bg); border: 0.5px solid var(--border2); color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; padding: 7px 12px; border-radius: 6px; outline: none; }
-.config-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
-.empty { font-size: 13px; color: var(--muted); padding: 6px 0; font-style: italic; }
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:var(--surface);border:0.5px solid var(--border2);border-radius:12px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:16px;font-weight:500;margin-bottom:1.25rem;color:var(--text)}
+.modal-section{margin-bottom:1.25rem}
+.modal-section-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.fields-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.field-group{display:flex;flex-direction:column;gap:4px}
+.field-label{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.field-input{min-width:unset;width:100%}
+.log-entry{background:var(--surface2);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.log-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);flex-shrink:0}
+.log-data{font-size:13px;color:var(--text);flex:1}
+.log-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px}
+.log-del:hover{color:var(--none-text)}
+
+/* Chart */
+.chart-wrap{width:100%;height:140px;position:relative;margin-top:8px}
+canvas.chart{width:100%!important;height:140px!important}
+.chart-empty{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;padding:8px 0;font-style:italic}
 </style>
 </head>
 <body>
@@ -107,6 +113,7 @@ h1 { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 400; color
     <button class="tab" onclick="setTab('pool')">Übungspool</button>
   </div>
 
+  <!-- WEEK -->
   <div id="view-week">
     <div class="stats">
       <div class="stat"><div class="stat-label">Fehlt</div><div class="stat-val none-color" id="s-none">0</div></div>
@@ -118,22 +125,24 @@ h1 { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 400; color
       <span class="leg"><span class="leg-dot" style="background:var(--half-border)"></span>1× gemacht</span>
       <span class="leg"><span class="leg-dot" style="background:var(--done-border)"></span>2× erledigt</span>
     </div>
-    <div class="section-label">Klick = 1× · nochmal = 2× · nochmal = zurücksetzen</div>
+    <div class="section-label">Klick = abhaken · 📋 = Details & Verlauf</div>
     <div class="chips" id="week-chips" style="margin-top:8px"></div>
     <div class="empty" id="week-empty" style="display:none">Noch keine Übungen. Füge welche im Tab "Übungspool" hinzu.</div>
   </div>
 
+  <!-- POOL -->
   <div id="view-pool" style="display:none">
     <div class="section-label">Dein Übungspool</div>
     <div class="chips" id="pool-chips" style="margin-top:8px"></div>
     <div class="empty" id="pool-empty" style="display:none">Noch leer.</div>
     <div class="add-row">
-      <input type="text" id="pool-input" placeholder="z.B. Kniebeugen" maxlength="40" onkeydown="if(event.key==='Enter')addToPool()">
+      <input type="text" id="pool-input" placeholder="z.B. Liegestütze" maxlength="40" onkeydown="if(event.key==='Enter')addToPool()">
       <button onclick="addToPool()">+ Hinzufügen</button>
     </div>
     <p class="help-text">Rechtsklick auf eine Übung = löschen</p>
   </div>
 
+  <!-- SETTINGS -->
   <div id="view-settings" style="display:none">
     <div class="config-box">
       <div class="config-label">Google OAuth Client-ID</div>
@@ -159,292 +168,331 @@ h1 { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 400; color
   </div>
 </div>
 
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h2 id="modal-title"></h2>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Training eintragen</div>
+      <div class="fields-row">
+        <div class="field-group">
+          <span class="field-label">Erster Satz (Wdh.)</span>
+          <input class="field-input" type="number" id="f-first" placeholder="z.B. 12" min="0">
+        </div>
+        <div class="field-group">
+          <span class="field-label">Gewicht (kg)</span>
+          <input class="field-input" type="number" id="f-weight" placeholder="z.B. 16" min="0" step="0.5">
+        </div>
+        <div class="field-group">
+          <span class="field-label">Rest-Pause Gesamt</span>
+          <input class="field-input" type="number" id="f-rp-total" placeholder="z.B. 20" min="0">
+        </div>
+      </div>
+      <div class="fields-row" style="grid-template-columns:1fr 1fr;margin-bottom:0">
+        <div class="field-group">
+          <span class="field-label">Rest-Pause Durchgänge</span>
+          <input class="field-input" type="number" id="f-rp-sets" placeholder="z.B. 5" min="0">
+        </div>
+        <div class="field-group">
+          <span class="field-label">Notiz (optional)</span>
+          <input class="field-input" type="text" id="f-note" placeholder="z.B. leichter heute" maxlength="60">
+        </div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn" onclick="saveLog()" style="flex:1">Eintragen</button>
+        <button class="btn" onclick="closeModal()">Abbrechen</button>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Entwicklung – Gesamtwiederholungen</div>
+      <div class="chart-wrap"><canvas id="chart-canvas"></canvas></div>
+      <div class="chart-empty" id="chart-empty" style="display:none">Noch keine Einträge.</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Verlauf</div>
+      <div id="log-list"></div>
+      <div class="empty" id="log-empty" style="display:none">Noch keine Einträge.</div>
+    </div>
+  </div>
+</div>
+
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://apis.google.com/js/api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-const FILE_NAME = 'workout_tracker_data.json';
-const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-const LS_STATE = 'wt_local';
-const LS_CLIENT = 'wt_client_id';
-const LS_TOKEN = 'wt_access_token';
-const LS_TOKEN_EXP = 'wt_token_exp';
+const FILE_NAME='workout_tracker_data.json';
+const SCOPES='https://www.googleapis.com/auth/drive.file';
+const LS_STATE='wt_local';
+const LS_CLIENT='wt_client_id';
+const LS_TOKEN='wt_access_token';
+const LS_TOKEN_EXP='wt_token_exp';
 
-let state = { pool: [], weeks: {} };
-let fileId = null;
-let wo = 0;
-let accessToken = null;
-let tokenClient = null;
-let gapiInited = false;
-let gisInited = false;
-let saveTimer = null;
+// state.pool = string[]
+// state.weeks = { weekKey: { exName: 0|1|2 } }
+// state.logs = { exName: [ { date, firstSet, weight, rpTotal, rpSets, note } ] }
+let state={pool:[],weeks:{},logs:{}};
+let fileId=null,wo=0,accessToken=null,tokenClient=null,gapiInited=false,gisInited=false,saveTimer=null;
+let currentModalEx=null,chartInstance=null;
 
-// ── Helpers ─────────────────────────────────────────────────
-function getClientId() { return localStorage.getItem(LS_CLIENT) || ''; }
-
-function saveClientId() {
-  const v = document.getElementById('client-id-input').value.trim();
-  if (!v) return;
-  localStorage.setItem(LS_CLIENT, v);
-  // clear old token so fresh login happens
-  localStorage.removeItem(LS_TOKEN);
-  localStorage.removeItem(LS_TOKEN_EXP);
-  setSyncStatus('loading', 'Client-ID gespeichert – lade APIs...');
+function getClientId(){return localStorage.getItem(LS_CLIENT)||'';}
+function saveClientId(){
+  const v=document.getElementById('client-id-input').value.trim();
+  if(!v)return;
+  localStorage.setItem(LS_CLIENT,v);
+  localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_TOKEN_EXP);
+  setSyncStatus('loading','Client-ID gespeichert – lade APIs...');
   initAll();
 }
-
-function setSyncStatus(status, msg) {
-  document.getElementById('sdot').className = 'sdot' + (status === 'err' ? ' err' : status === 'loading' ? ' loading' : '');
-  document.getElementById('smsg').textContent = msg;
+function setSyncStatus(s,m){
+  document.getElementById('sdot').className='sdot'+(s==='err'?' err':s==='loading'?' loading':'');
+  document.getElementById('smsg').textContent=m;
 }
-
-function updateSettingsStatus() {
-  const el = document.getElementById('settings-status');
-  if (!getClientId()) { el.textContent = 'Keine Client-ID eingetragen.'; return; }
-  el.textContent = accessToken ? 'Verbunden mit Google Drive ✓' : 'Nicht angemeldet.';
+function updateSettingsStatus(){
+  const el=document.getElementById('settings-status');
+  if(!getClientId()){el.textContent='Keine Client-ID eingetragen.';return;}
+  el.textContent=accessToken?'Verbunden mit Google Drive ✓':'Nicht angemeldet.';
 }
+function saveToken(t,exp){accessToken=t;const e=Date.now()+(exp-60)*1000;localStorage.setItem(LS_TOKEN,t);localStorage.setItem(LS_TOKEN_EXP,e);}
+function loadSavedToken(){const t=localStorage.getItem(LS_TOKEN),e=parseInt(localStorage.getItem(LS_TOKEN_EXP)||'0');if(t&&Date.now()<e){accessToken=t;return true;}localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_TOKEN_EXP);return false;}
+function clearToken(){accessToken=null;localStorage.removeItem(LS_TOKEN);localStorage.removeItem(LS_TOKEN_EXP);}
 
-// ── Token persistence ────────────────────────────────────────
-function saveToken(token, expiresIn) {
-  accessToken = token;
-  const exp = Date.now() + (expiresIn - 60) * 1000; // 1 min buffer
-  localStorage.setItem(LS_TOKEN, token);
-  localStorage.setItem(LS_TOKEN_EXP, exp);
-}
-
-function loadSavedToken() {
-  const token = localStorage.getItem(LS_TOKEN);
-  const exp = parseInt(localStorage.getItem(LS_TOKEN_EXP) || '0');
-  if (token && Date.now() < exp) {
-    accessToken = token;
-    return true;
-  }
-  localStorage.removeItem(LS_TOKEN);
-  localStorage.removeItem(LS_TOKEN_EXP);
-  return false;
-}
-
-function clearToken() {
-  accessToken = null;
-  localStorage.removeItem(LS_TOKEN);
-  localStorage.removeItem(LS_TOKEN_EXP);
-}
-
-// ── GAPI + GIS init ──────────────────────────────────────────
-function initAll() {
-  const cid = getClientId();
-  if (!cid) { setSyncStatus('err', 'Keine Client-ID – bitte in ⚙ eintragen'); return; }
-
-  gapi.load('client', async () => {
-    await gapi.client.init({
-      discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
-    });
-    gapiInited = true;
-    checkReady();
+function initAll(){
+  const cid=getClientId();
+  if(!cid){setSyncStatus('err','Keine Client-ID – bitte in ⚙ eintragen');return;}
+  gapi.load('client',async()=>{
+    await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']});
+    gapiInited=true;checkReady();
   });
-
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: cid,
-    scope: SCOPES,
-    callback: async (resp) => {
-      if (resp.error) { setSyncStatus('err', 'Login fehlgeschlagen: ' + resp.error); return; }
-      saveToken(resp.access_token, resp.expires_in || 3600);
-      gapi.client.setToken({ access_token: accessToken });
-      setSyncStatus('loading', 'Lade Daten...');
-      await loadData();
-      updateSettingsStatus();
-    }
-  });
-  gisInited = true;
-  checkReady();
+  tokenClient=google.accounts.oauth2.initTokenClient({client_id:cid,scope:SCOPES,callback:async(resp)=>{
+    if(resp.error){setSyncStatus('err','Login fehlgeschlagen: '+resp.error);return;}
+    saveToken(resp.access_token,resp.expires_in||3600);
+    gapi.client.setToken({access_token:accessToken});
+    setSyncStatus('loading','Lade Daten...');
+    await loadData();updateSettingsStatus();
+  }});
+  gisInited=true;checkReady();
 }
-
-async function checkReady() {
-  if (!gapiInited || !gisInited) return;
-  // Try saved token first
-  if (loadSavedToken()) {
-    gapi.client.setToken({ access_token: accessToken });
-    setSyncStatus('loading', 'Lade Daten...');
-    try {
-      await loadData();
-      updateSettingsStatus();
-    } catch(e) {
-      // Token might be expired server-side, clear and ask to login
-      clearToken();
-      setSyncStatus('err', 'Session abgelaufen – bitte neu anmelden');
-      updateSettingsStatus();
-    }
-  } else {
-    setSyncStatus('err', 'Nicht angemeldet – bitte "Mit Google anmelden" klicken');
-    updateSettingsStatus();
-  }
+async function checkReady(){
+  if(!gapiInited||!gisInited)return;
+  if(loadSavedToken()){
+    gapi.client.setToken({access_token:accessToken});
+    setSyncStatus('loading','Lade Daten...');
+    try{await loadData();updateSettingsStatus();}
+    catch(e){clearToken();setSyncStatus('err','Session abgelaufen – bitte neu anmelden');updateSettingsStatus();}
+  } else {setSyncStatus('err','Nicht angemeldet – bitte "Mit Google anmelden" klicken');updateSettingsStatus();}
 }
+function signIn(){if(!tokenClient){setSyncStatus('err','API noch nicht bereit');return;}tokenClient.requestAccessToken({prompt:''});}
+function signOut(){if(accessToken)google.accounts.oauth2.revoke(accessToken);clearToken();gapi.client.setToken(null);setSyncStatus('err','Abgemeldet');updateSettingsStatus();}
 
-function signIn() {
-  if (!tokenClient) { setSyncStatus('err', 'API noch nicht bereit'); return; }
-  tokenClient.requestAccessToken({ prompt: '' });
+async function findOrCreateFile(){
+  const res=await gapi.client.drive.files.list({q:`name='${FILE_NAME}' and trashed=false`,fields:'files(id)',spaces:'drive'});
+  const files=res.result.files;
+  if(files&&files.length>0){fileId=files[0].id;return;}
+  const boundary='wt_b';
+  const body=`--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({name:FILE_NAME,mimeType:'application/json'})}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(state)}\r\n--${boundary}--`;
+  const r=await gapi.client.request({path:'/upload/drive/v3/files',method:'POST',params:{uploadType:'multipart',fields:'id'},headers:{'Content-Type':`multipart/related; boundary=${boundary}`},body});
+  fileId=r.result.id;
 }
-
-function signOut() {
-  if (accessToken) google.accounts.oauth2.revoke(accessToken);
-  clearToken();
-  gapi.client.setToken(null);
-  setSyncStatus('err', 'Abgemeldet');
-  updateSettingsStatus();
-}
-
-// ── Drive ────────────────────────────────────────────────────
-async function findOrCreateFile() {
-  const res = await gapi.client.drive.files.list({
-    q: `name='${FILE_NAME}' and trashed=false`,
-    fields: 'files(id)', spaces: 'drive'
-  });
-  const files = res.result.files;
-  if (files && files.length > 0) { fileId = files[0].id; return; }
-  const boundary = 'wt_b';
-  const body = `--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({name:FILE_NAME,mimeType:'application/json'})}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(state)}\r\n--${boundary}--`;
-  const r = await gapi.client.request({
-    path: '/upload/drive/v3/files', method: 'POST',
-    params: { uploadType: 'multipart', fields: 'id' },
-    headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
-    body
-  });
-  fileId = r.result.id;
-}
-
-async function loadData() {
+async function loadData(){
   await findOrCreateFile();
-  const r = await gapi.client.drive.files.get({ fileId, alt: 'media' });
-  const parsed = typeof r.result === 'string' ? JSON.parse(r.result) : r.result;
-  if (parsed && parsed.pool) state = parsed;
-  try { localStorage.setItem(LS_STATE, JSON.stringify(state)); } catch(e) {}
-  setSyncStatus('ok', 'Verbunden mit Google Drive ✓');
-  render();
+  const r=await gapi.client.drive.files.get({fileId,alt:'media'});
+  const parsed=typeof r.result==='string'?JSON.parse(r.result):r.result;
+  if(parsed&&parsed.pool){state=parsed;if(!state.logs)state.logs={};}
+  try{localStorage.setItem(LS_STATE,JSON.stringify(state));}catch(e){}
+  setSyncStatus('ok','Verbunden mit Google Drive ✓');render();
+}
+async function saveToDrive(){
+  if(!fileId||!accessToken)return;
+  await gapi.client.request({path:`/upload/drive/v3/files/${fileId}`,method:'PATCH',params:{uploadType:'media'},headers:{'Content-Type':'application/json'},body:JSON.stringify(state)});
+}
+async function syncNow(){
+  if(!accessToken){setSyncStatus('err','Nicht angemeldet');return;}
+  setSyncStatus('loading','Synchronisiere...');
+  try{await loadData();setSyncStatus('ok','Synchronisiert ✓');}
+  catch(e){setSyncStatus('err','Sync fehlgeschlagen');}
+}
+function scheduleSave(){
+  try{localStorage.setItem(LS_STATE,JSON.stringify(state));}catch(e){}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    if(!accessToken)return;
+    setSyncStatus('loading','Speichere...');
+    try{await saveToDrive();setSyncStatus('ok','Gespeichert ✓');}
+    catch(e){setSyncStatus('err','Speichern fehlgeschlagen');}
+  },800);
+}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='workout_backup.json';a.click();}
+
+// ── Modal ────────────────────────────────────────────────────
+function openModal(name){
+  currentModalEx=name;
+  document.getElementById('modal-title').textContent=name;
+  document.getElementById('f-first').value='';
+  document.getElementById('f-weight').value='';
+  document.getElementById('f-rp-total').value='';
+  document.getElementById('f-rp-sets').value='';
+  document.getElementById('f-note').value='';
+  // prefill last values
+  const logs=(state.logs[name]||[]);
+  if(logs.length>0){
+    const last=logs[logs.length-1];
+    if(last.weight)document.getElementById('f-weight').value=last.weight;
+  }
+  renderLogList(name);
+  renderChart(name);
+  document.getElementById('modal').style.display='flex';
+}
+function closeModal(){document.getElementById('modal').style.display='none';currentModalEx=null;}
+
+function saveLog(){
+  const name=currentModalEx;
+  if(!name)return;
+  const first=parseFloat(document.getElementById('f-first').value)||null;
+  const weight=parseFloat(document.getElementById('f-weight').value)||null;
+  const rpTotal=parseFloat(document.getElementById('f-rp-total').value)||null;
+  const rpSets=parseFloat(document.getElementById('f-rp-sets').value)||null;
+  const note=document.getElementById('f-note').value.trim()||null;
+  if(!first&&!rpTotal){return;}
+  if(!state.logs[name])state.logs[name]=[];
+  state.logs[name].push({date:new Date().toISOString().slice(0,10),firstSet:first,weight,rpTotal,rpSets,note});
+  scheduleSave();
+  renderLogList(name);
+  renderChart(name);
+  document.getElementById('f-first').value='';
+  document.getElementById('f-rp-total').value='';
+  document.getElementById('f-rp-sets').value='';
+  document.getElementById('f-note').value='';
 }
 
-async function saveToDrive() {
-  if (!fileId || !accessToken) return;
-  await gapi.client.request({
-    path: `/upload/drive/v3/files/${fileId}`, method: 'PATCH',
-    params: { uploadType: 'media' },
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(state)
+function deleteLog(name,idx){
+  state.logs[name].splice(idx,1);
+  scheduleSave();
+  renderLogList(name);
+  renderChart(name);
+}
+
+function renderLogList(name){
+  const logs=(state.logs[name]||[]).slice().reverse();
+  const container=document.getElementById('log-list');
+  const empty=document.getElementById('log-empty');
+  container.innerHTML='';
+  if(logs.length===0){empty.style.display='';return;}
+  empty.style.display='none';
+  logs.forEach((l,ri)=>{
+    const idx=(state.logs[name]||[]).length-1-ri;
+    const parts=[];
+    if(l.firstSet)parts.push(`1. Satz: ${l.firstSet} Wdh.`);
+    if(l.weight)parts.push(`${l.weight} kg`);
+    if(l.rpTotal)parts.push(`Rest-Pause: ${l.rpTotal} Wdh.${l.rpSets?' in '+l.rpSets+' Durchg.':''}`);
+    if(l.note)parts.push(`"${l.note}"`);
+    const el=document.createElement('div');
+    el.className='log-entry';
+    el.innerHTML=`<span class="log-date">${l.date}</span><span class="log-data">${parts.join(' · ')}</span><button class="log-del" onclick="deleteLog('${name}',${idx})" title="Löschen">×</button>`;
+    container.appendChild(el);
   });
 }
 
-async function syncNow() {
-  if (!accessToken) { setSyncStatus('err', 'Nicht angemeldet'); return; }
-  setSyncStatus('loading', 'Synchronisiere...');
-  try { await loadData(); setSyncStatus('ok', 'Synchronisiert ✓'); }
-  catch(e) { setSyncStatus('err', 'Sync fehlgeschlagen'); }
+function renderChart(name){
+  const logs=(state.logs[name]||[]);
+  const canvas=document.getElementById('chart-canvas');
+  const empty=document.getElementById('chart-empty');
+  const dataPoints=logs.filter(l=>l.rpTotal||l.firstSet).map(l=>{
+    const total=(l.firstSet||0)+(l.rpTotal||0);
+    return{x:l.date,y:total};
+  });
+  if(dataPoints.length<2){empty.style.display='';canvas.style.display='none';if(chartInstance){chartInstance.destroy();chartInstance=null;}return;}
+  empty.style.display='none';canvas.style.display='';
+  if(chartInstance)chartInstance.destroy();
+  chartInstance=new Chart(canvas,{
+    type:'line',
+    data:{datasets:[{data:dataPoints,borderColor:'#97C459',backgroundColor:'rgba(151,196,89,.1)',borderWidth:2,pointBackgroundColor:'#97C459',pointRadius:4,tension:.3,fill:true}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} Wdh. gesamt`}}},
+      scales:{
+        x:{type:'category',ticks:{color:'#666',font:{family:'DM Mono',size:10}},grid:{color:'#1e1e1e'}},
+        y:{ticks:{color:'#666',font:{family:'DM Mono',size:10}},grid:{color:'#1e1e1e'},beginAtZero:false}
+      }
+    }
+  });
 }
 
-function scheduleSave() {
-  try { localStorage.setItem(LS_STATE, JSON.stringify(state)); } catch(e) {}
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    if (!accessToken) return;
-    setSyncStatus('loading', 'Speichere...');
-    try { await saveToDrive(); setSyncStatus('ok', 'Gespeichert ✓'); }
-    catch(e) { setSyncStatus('err', 'Speichern fehlgeschlagen'); }
-  }, 800);
+// ── Core ─────────────────────────────────────────────────────
+function wk(o){const d=new Date();const day=d.getDay();d.setDate(d.getDate()-(day===0?6:day-1)+o*7);d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
+function wLabel(o){const m=new Date(wk(o));const e=new Date(m);e.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});if(o===0)return`${f(m)} – ${f(e)}`;if(o===-1)return'Letzte Woche';if(o===1)return'Nächste Woche';return`${f(m)} – ${f(e)}`;}
+function getWC(){const k=wk(wo);if(!state.weeks[k])state.weeks[k]={};return state.weeks[k];}
+function daysLeft(){const d=new Date().getDay();return d===0?0:7-d;}
+function cycleEx(name){const wc=getWC();wc[name]=((wc[name]||0)+1)%3;scheduleSave();render();}
+function addToPool(){const inp=document.getElementById('pool-input');const n=inp.value.trim();if(!n||state.pool.includes(n))return;state.pool.push(n);inp.value='';scheduleSave();render();}
+function removeFromPool(name){state.pool=state.pool.filter(p=>p!==name);scheduleSave();render();}
+function cw(d){wo+=d;render();}
+function setTab(t){
+  ['week','pool','settings'].forEach(id=>document.getElementById('view-'+id).style.display=id===t?'':'none');
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='week')||(i===1&&t==='pool')));
+  if(t==='settings'){document.getElementById('client-id-input').value=getClientId();updateSettingsStatus();}
 }
 
-function exportData() {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'workout_backup.json'; a.click();
-}
-
-// ── State / UI ───────────────────────────────────────────────
-function wk(o) {
-  const d = new Date(); const day = d.getDay();
-  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1) + o * 7);
-  d.setHours(0,0,0,0); return d.toISOString().slice(0,10);
-}
-function wLabel(o) {
-  const m = new Date(wk(o)); const e = new Date(m); e.setDate(m.getDate()+6);
-  const f = d => d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
-  if (o===0) return `${f(m)} – ${f(e)}`;
-  if (o===-1) return `Letzte Woche`;
-  if (o===1) return `Nächste Woche`;
-  return `${f(m)} – ${f(e)}`;
-}
-function getWC() { const k=wk(wo); if(!state.weeks[k]) state.weeks[k]={}; return state.weeks[k]; }
-function daysLeft() { const d=new Date().getDay(); return d===0?0:7-d; }
-function cycleEx(name) { const wc=getWC(); wc[name]=((wc[name]||0)+1)%3; scheduleSave(); render(); }
-function addToPool() {
-  const inp=document.getElementById('pool-input'); const n=inp.value.trim();
-  if(!n||state.pool.includes(n)) return;
-  state.pool.push(n); inp.value=''; scheduleSave(); render();
-}
-function removeFromPool(name) { state.pool=state.pool.filter(p=>p!==name); scheduleSave(); render(); }
-function cw(d) { wo+=d; render(); }
-
-function setTab(t) {
-  ['week','pool','settings'].forEach(id => document.getElementById('view-'+id).style.display = id===t?'':'none');
-  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active',(i===0&&t==='week')||(i===1&&t==='pool')));
-  if (t==='settings') { document.getElementById('client-id-input').value=getClientId(); updateSettingsStatus(); }
-}
-
-function render() {
-  document.getElementById('wlabel').textContent = wLabel(wo);
-  const wc=getWC(); const pool=state.pool;
+function render(){
+  document.getElementById('wlabel').textContent=wLabel(wo);
+  const wc=getWC();const pool=state.pool;
   let done=0,half=0,none=0;
-  pool.forEach(n=>{const c=wc[n]||0; if(c>=2)done++; else if(c===1)half++; else none++;});
+  pool.forEach(n=>{const c=wc[n]||0;if(c>=2)done++;else if(c===1)half++;else none++;});
   document.getElementById('s-done').textContent=done;
   document.getElementById('s-half').textContent=half;
   document.getElementById('s-none').textContent=none;
 
   const um=document.getElementById('urgency-msg');
   if(pool.length>0&&wo===0){
-    const left=daysLeft(); const missing=none+half;
-    if(missing===0) um.innerHTML=`<div class="urgency u-ok">alle übungen diese woche erledigt.</div>`;
-    else if(left<=1) um.innerHTML=`<div class="urgency u-crit">woche endet bald — noch ${missing} übung${missing>1?'en':''} offen.</div>`;
-    else if(left<=3) um.innerHTML=`<div class="urgency u-warn">noch ${left} tage — ${missing} ausstehend.</div>`;
+    const left=daysLeft();const missing=none+half;
+    if(missing===0)um.innerHTML=`<div class="urgency u-ok">alle übungen diese woche erledigt.</div>`;
+    else if(left<=1)um.innerHTML=`<div class="urgency u-crit">woche endet bald — noch ${missing} übung${missing>1?'en':''} offen.</div>`;
+    else if(left<=3)um.innerHTML=`<div class="urgency u-warn">noch ${left} tage — ${missing} ausstehend.</div>`;
     else um.innerHTML=`<div class="urgency u-ok">${left} tage übrig, ${missing} übung${missing>1?'en':''} zu erledigen.</div>`;
-  } else { um.innerHTML=''; }
+  } else {um.innerHTML='';}
 
-  const wchips=document.getElementById('week-chips'); wchips.innerHTML='';
+  const wchips=document.getElementById('week-chips');wchips.innerHTML='';
   if(pool.length===0){document.getElementById('week-empty').style.display='';}
-  else {
+  else{
     document.getElementById('week-empty').style.display='none';
     [...pool].sort((a,b)=>(wc[a]||0)-(wc[b]||0)).forEach(name=>{
       const c=wc[name]||0;
-      const el=document.createElement('button');
-      el.className='chip '+(c>=2?'chip-done':c===1?'chip-half':'chip-none');
-      el.innerHTML=`${name}<span class="badge">${c>=2?'2×':c===1?'1×':'0×'}</span>`;
-      el.onclick=()=>cycleEx(name);
-      wchips.appendChild(el);
+      const wrap=document.createElement('div');wrap.style.display='inline-flex';wrap.style.alignItems='center';wrap.style.gap='4px';wrap.style.margin='3px';
+      const btn=document.createElement('button');
+      btn.className='chip '+(c>=2?'chip-done':c===1?'chip-half':'chip-none');
+      btn.style.margin='0';
+      btn.innerHTML=`${name}<span class="badge">${c>=2?'2×':c===1?'1×':'0×'}</span>`;
+      btn.onclick=()=>cycleEx(name);
+      const detail=document.createElement('button');
+      detail.className='chip chip-detail';
+      detail.textContent='📋';
+      detail.title='Details & Verlauf';
+      detail.onclick=()=>openModal(name);
+      wrap.appendChild(btn);wrap.appendChild(detail);
+      wchips.appendChild(wrap);
     });
   }
 
-  const pchips=document.getElementById('pool-chips'); pchips.innerHTML='';
+  const pchips=document.getElementById('pool-chips');pchips.innerHTML='';
   if(pool.length===0){document.getElementById('pool-empty').style.display='';}
-  else {
+  else{
     document.getElementById('pool-empty').style.display='none';
     pool.forEach(name=>{
-      const el=document.createElement('button');
-      el.className='chip chip-pool'; el.textContent=name;
+      const el=document.createElement('button');el.className='chip chip-pool';el.textContent=name;
       el.oncontextmenu=e=>{e.preventDefault();removeFromPool(name);};
       pchips.appendChild(el);
     });
   }
 }
 
-// ── Boot ─────────────────────────────────────────────────────
-try { const r=localStorage.getItem(LS_STATE); if(r) state=JSON.parse(r); } catch(e) {}
+try{const r=localStorage.getItem(LS_STATE);if(r){const p=JSON.parse(r);state=p;if(!state.logs)state.logs={};}}catch(e){}
 render();
-
-window.addEventListener('load', () => {
-  const cid = getClientId();
-  if (!cid) { setSyncStatus('err', 'Keine Client-ID – bitte in ⚙ eintragen'); return; }
-  // Wait for GIS to be available
-  const tryInit = () => {
-    if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-      initAll();
-    } else {
-      setTimeout(tryInit, 100);
-    }
-  };
+window.addEventListener('load',()=>{
+  const cid=getClientId();
+  if(!cid){setSyncStatus('err','Keine Client-ID – bitte in ⚙ eintragen');return;}
+  const tryInit=()=>{if(typeof google!=='undefined'&&google.accounts&&google.accounts.oauth2){initAll();}else{setTimeout(tryInit,100);}};
   tryInit();
 });
 </script>
