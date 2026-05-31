@@ -348,21 +348,59 @@ canvas.chart{width:100%!important;height:130px!important}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // ── Audio ────────────────────────────────────────────────────
-function playTriple(){
-  // "uuuh" wobbly sound for 3+ times
+function playOnce(){
+  // Simple 2-note pickup for 1x
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [[523.25,0],[783.99,.1]].forEach(([freq,t])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=freq;const st=ctx.currentTime+t;
+      g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.15,st+.02);g.gain.exponentialRampToValueAtTime(.001,st+.2);
+      o.start(st);o.stop(st+.2);
+    });
+  }catch(e){}
+}
+function playDouble(){
+  // Rising 4-note fanfare for 2x – clearly different from 1x
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [[392,.0],[523.25,.1],[659.25,.2],[880,.3],[1046.5,.45]].forEach(([freq,t])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=freq;const st=ctx.currentTime+t;
+      g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.2,st+.03);g.gain.exponentialRampToValueAtTime(.001,st+.35);
+      o.start(st);o.stop(st+.35);
+    });
+    // shimmer on top
+    const o2=ctx.createOscillator(),g2=ctx.createGain();o2.connect(g2);g2.connect(ctx.destination);
+    o2.type='triangle';o2.frequency.value=2093;const t2=ctx.currentTime+.5;
+    g2.gain.setValueAtTime(.12,t2);g2.gain.exponentialRampToValueAtTime(.001,t2+.4);o2.start(t2);o2.stop(t2+.4);
+  }catch(e){}
+}
+function playTriple(){
+  // Wobbly "uuuh" for 3x – clearly weird/fun
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    // wobble oscillator
     const o=ctx.createOscillator(),g=ctx.createGain();
     o.connect(g);g.connect(ctx.destination);
-    o.type='sine';
-    o.frequency.setValueAtTime(440,ctx.currentTime);
-    o.frequency.linearRampToValueAtTime(500,ctx.currentTime+.08);
-    o.frequency.linearRampToValueAtTime(420,ctx.currentTime+.16);
-    o.frequency.linearRampToValueAtTime(480,ctx.currentTime+.24);
-    o.frequency.linearRampToValueAtTime(440,ctx.currentTime+.32);
-    g.gain.setValueAtTime(.15,ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.5);
-    o.start(ctx.currentTime);o.stop(ctx.currentTime+.5);
+    o.type='sawtooth';
+    o.frequency.setValueAtTime(300,ctx.currentTime);
+    o.frequency.linearRampToValueAtTime(420,ctx.currentTime+.1);
+    o.frequency.linearRampToValueAtTime(260,ctx.currentTime+.2);
+    o.frequency.linearRampToValueAtTime(380,ctx.currentTime+.3);
+    o.frequency.linearRampToValueAtTime(220,ctx.currentTime+.4);
+    o.frequency.linearRampToValueAtTime(340,ctx.currentTime+.5);
+    g.gain.setValueAtTime(.18,ctx.currentTime);
+    g.gain.linearRampToValueAtTime(.18,ctx.currentTime+.4);
+    g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.7);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+.7);
+    // crowd "ooh" effect with second voice
+    const o2=ctx.createOscillator(),g2=ctx.createGain();
+    o2.connect(g2);g2.connect(ctx.destination);
+    o2.type='sine';o2.frequency.value=180;
+    const t2=ctx.currentTime+.05;
+    g2.gain.setValueAtTime(0,t2);g2.gain.linearRampToValueAtTime(.1,t2+.05);g2.gain.exponentialRampToValueAtTime(.001,t2+.6);
+    o2.start(t2);o2.stop(t2+.6);
   }catch(e){}
 }
 function spawnRainbow(el){
@@ -647,8 +685,8 @@ function handleSimpleTap(name,chipEl){
     chipEl.classList.add('pickup');
     setTimeout(()=>chipEl.classList.remove('pickup'),500);
     if(newCount>=3){playTriple();spawnRainbow(chipEl);}
-    else if(newCount===2){playPickup();spawnSparkles(chipEl,true);}
-    else{playPickup();spawnSparkles(chipEl,false);}
+    else if(newCount===2){playDouble();spawnSparkles(chipEl,true);}
+    else{playOnce();spawnSparkles(chipEl,false);}
   }
   scheduleSave();render();
 }
@@ -691,8 +729,8 @@ function saveLog(){
         chip.classList.add('pickup');
         setTimeout(()=>chip.classList.remove('pickup'),500);
         if(c>=3){playTriple();spawnRainbow(chip);}
-        else if(c===2){playPickup();spawnSparkles(chip,true);}
-        else{playPickup();spawnSparkles(chip,false);}
+        else if(c===2){playDouble();spawnSparkles(chip,true);}
+        else{playOnce();spawnSparkles(chip,false);}
       }
     });
   },50);
