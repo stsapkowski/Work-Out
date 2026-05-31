@@ -377,30 +377,23 @@ function playDouble(){
   }catch(e){}
 }
 function playTriple(){
-  // Wobbly "uuuh" for 3x – clearly weird/fun
+  // Achievement unlocked jingle – descending surprise
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    // wobble oscillator
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);
-    o.type='sawtooth';
-    o.frequency.setValueAtTime(300,ctx.currentTime);
-    o.frequency.linearRampToValueAtTime(420,ctx.currentTime+.1);
-    o.frequency.linearRampToValueAtTime(260,ctx.currentTime+.2);
-    o.frequency.linearRampToValueAtTime(380,ctx.currentTime+.3);
-    o.frequency.linearRampToValueAtTime(220,ctx.currentTime+.4);
-    o.frequency.linearRampToValueAtTime(340,ctx.currentTime+.5);
-    g.gain.setValueAtTime(.18,ctx.currentTime);
-    g.gain.linearRampToValueAtTime(.18,ctx.currentTime+.4);
-    g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.7);
-    o.start(ctx.currentTime);o.stop(ctx.currentTime+.7);
-    // crowd "ooh" effect with second voice
-    const o2=ctx.createOscillator(),g2=ctx.createGain();
-    o2.connect(g2);g2.connect(ctx.destination);
-    o2.type='sine';o2.frequency.value=180;
-    const t2=ctx.currentTime+.05;
-    g2.gain.setValueAtTime(0,t2);g2.gain.linearRampToValueAtTime(.1,t2+.05);g2.gain.exponentialRampToValueAtTime(.001,t2+.6);
-    o2.start(t2);o2.stop(t2+.6);
+    // main jingle: high to low with a little bounce at the end
+    [[1046.5,0,.15],[880,.1,.15],[698.46,.2,.15],[587.33,.3,.18],[698.46,.42,.12],[880,.52,.2]].forEach(([freq,t,vol])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+      o.type='square';o.frequency.value=freq;const st=ctx.currentTime+t;
+      g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(vol*.5,st+.015);g.gain.exponentialRampToValueAtTime(.001,st+.18);
+      o.start(st);o.stop(st+.18);
+    });
+    // soft sine doubles for warmth
+    [[1046.5,0],[880,.1],[698.46,.2],[587.33,.3]].forEach(([freq,t])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=freq;const st=ctx.currentTime+t;
+      g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.12,st+.015);g.gain.exponentialRampToValueAtTime(.001,st+.22);
+      o.start(st);o.stop(st+.22);
+    });
   }catch(e){}
 }
 function spawnRainbow(el){
