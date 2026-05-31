@@ -355,9 +355,10 @@ function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'
 
 // ── Date helpers ─────────────────────────────────────────────
 function todayStr(){return new Date().toISOString().slice(0,10);}
-function wk(o){const d=new Date();const day=d.getDay();d.setDate(d.getDate()-(day===0?6:day-1)+o*7);d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
+function wk(o){const d=new Date();const day=d.getDay()||7;// 1=Mo...7=So
+d.setDate(d.getDate()-(day-1)+o*7);d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
 function wLabel(o){const m=new Date(wk(o));const e=new Date(m);e.setDate(m.getDate()+6);const f=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});if(o===0)return`${f(m)} – ${f(e)}`;if(o===-1)return'Letzte Woche';if(o===1)return'Nächste Woche';return`${f(m)} – ${f(e)}`;}
-function daysLeft(){const d=new Date().getDay();return d===0?0:7-d;}
+function daysLeft(){const d=new Date().getDay()||7;return 7-d;}
 function getWeekDates(o){const mon=new Date(wk(o));return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().slice(0,10);});}
 
 // ── Week count (based on logs) ───────────────────────────────
