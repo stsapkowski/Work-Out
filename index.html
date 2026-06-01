@@ -265,11 +265,14 @@ canvas.chart{width:100%!important;height:130px!important}
 
   <div id="view-week">
     <div class="rune-ornament" id="rune-top">᛫ ᚱ ᚢ ᚾ ᛖ ᚾ ᛫</div>
-    <div style="display:grid;grid-template-columns:110px 1fr;gap:10px;margin-bottom:1.5rem">
-
-      <!-- LEFT: Knight + dialog -->
+    <!-- Calendar full width -->
+    <div class="week-calendar" id="week-calendar"></div>
+    <div class="orn-divider">⬥ ⬥ ⬥</div>
+    <!-- Knight left, stats+chips right -->
+    <div style="display:grid;grid-template-columns:108px 1fr;gap:12px;align-items:start">
+      <!-- Knight column -->
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div class="knight-sprite" onclick="knightTap()" style="width:110px;flex-shrink:0">
+        <div class="knight-sprite" onclick="knightTap()" style="width:108px;flex-shrink:0">
           <svg width="110" height="150" viewBox="0 0 56 90" xmlns="http://www.w3.org/2000/svg" style="display:block">
             <g class="knight-body">
               <ellipse cx="30" cy="88" rx="14" ry="3" fill="#000" opacity=".35"/>
@@ -312,29 +315,27 @@ canvas.chart{width:100%!important;height:130px!important}
             </g>
           </svg>
         </div>
-        <div class="knight-name" style="font-size:8px;text-align:center">Ser Aldric</div>
-        <div class="knight-bubble-inner" id="knight-text" style="font-size:12px;padding:7px 9px;line-height:1.4">...</div>
-        <div id="knight-options" style="display:flex;flex-direction:column;gap:4px"></div>
+        <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);opacity:.6;text-align:center">Ser Aldric</div>
+        <div class="knight-bubble-inner" id="knight-text" style="font-size:11px;padding:7px 9px;line-height:1.4">...</div>
+        <div id="knight-options" style="display:flex;flex-direction:column;gap:3px"></div>
       </div>
-
-      <!-- RIGHT: Calendar -->
-      <div class="week-calendar" id="week-calendar"></div>
-
+      <!-- Stats + chips column -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="stats">
+          <div class="stat s-none"><div class="stat-label">Fehlt</div><div class="stat-val" id="s-none">0</div></div>
+          <div class="stat s-half"><div class="stat-label">1× Gut</div><div class="stat-val" id="s-half">0</div></div>
+          <div class="stat s-done"><div class="stat-label">2× Gold</div><div class="stat-val" id="s-done">0</div></div>
+        </div>
+        <div class="legend">
+          <span class="leg"><span style="color:#c44040;font-size:9px">◆</span> Offen</span>
+          <span class="leg"><span style="color:#3a8a3a;font-size:9px">◆</span> 1× gemacht</span>
+          <span class="leg"><span style="color:#b8922a;font-size:9px">◆</span> 2× erledigt</span>
+        </div>
+        <div class="section-hint">Übung antippen → Training eintragen</div>
+        <div class="chips" id="week-chips"></div>
+        <div class="empty-text" id="week-empty" style="display:none">Noch keine Übungen im Pool.</div>
+      </div>
     </div>
-    <div class="orn-divider">⬥ ⬥ ⬥</div>
-    <div class="stats">
-      <div class="stat s-none"><div class="stat-label">Fehlt</div><div class="stat-val" id="s-none">0</div></div>
-      <div class="stat s-half"><div class="stat-label">1× Gut</div><div class="stat-val" id="s-half">0</div></div>
-      <div class="stat s-done"><div class="stat-label">2× Gold</div><div class="stat-val" id="s-done">0</div></div>
-    </div>
-    <div class="legend">
-      <span class="leg"><span style="color:#c44040;font-size:9px">◆</span> Offen</span>
-      <span class="leg"><span style="color:#3a8a3a;font-size:9px">◆</span> 1× gemacht</span>
-      <span class="leg"><span style="color:#b8922a;font-size:9px">◆</span> 2× erledigt</span>
-    </div>
-    <div class="section-hint">Übung antippen → Training eintragen</div>
-    <div class="chips" id="week-chips"></div>
-    <div class="empty-text" id="week-empty" style="display:none">Noch keine Übungen im Pool.</div>
   </div>
 
   <div id="view-pool" style="display:none">
@@ -988,31 +989,38 @@ const KNIGHT_DIALOGS = [
     ]
   },
   {
-    text: "Disziplin ist keine Eigenschaft. Disziplin ist eine Entscheidung. Eine täglich neue, schmerzhaft langweilige Entscheidung. Willkommen.",
+    text: "Disziplin ist eine Entscheidung. Jeden Tag neu. Manche Tage ist es eine leichte Entscheidung. Diese Tage misstraue ich.",
     options: [
       { label: "Klingt anstrengend.", reply: "Das ist der Punkt. Du verstehst es bereits." },
       { label: "Ich bin dabei.", reply: "Natürlich bist du dabei. Du hast die App geöffnet. Das zählt." }
     ]
   },
   {
-    text: "Mein Schwertarm ist stärker als mein Schildarm. Das macht mich zu einem asymmetrischen Krieger. Und zu einem schlechten Türsteher.",
+    text: "Disziplin ist keine Eigenschaft. Disziplin ist eine Entscheidung. Eine täglich neue, schmerzhaft langweilige Entscheidung. Willkommen.",
     options: [
-      { label: "Hast du daran gearbeitet?", reply: "Nein. Aber ich habe darüber nachgedacht. Das ist der erste Schritt." },
+      { label: "Klingt bekannt.", reply: "Jeden Tag. Ohne Ausnahme. Das ist der Witz." },
+      { label: "Ich weiß.", reply: "Gut. Dann brauche ich das morgen nicht zu wiederholen. Ich werde es trotzdem tun." }
+    ]
+  },
+  {
+    text: "Mein Schwertarm ist stärker als mein Schildarm. Ich habe zwanzig Jahre daran gearbeitet, das auszugleichen. Es ist schlimmer geworden.",
+    options: [
+      { label: "Hast du aufgegeben?", reply: "Nein. Ich habe die Definition von Gleichgewicht angepasst." },
       { label: "Das ist seltsam.", reply: "Ja. Aber es erklärt meine Haltung." }
     ]
   },
   {
-    text: "Heute musst du nichts beweisen. Außer dir selbst. Und mir. Ich schaue zu. Immer.",
+    text: "Heute musst du nichts beweisen. Außer dir selbst. Und mir. Ich schaue zu. Das ist keine Drohung. Nun ja.",
     options: [
-      { label: "Das ist creepy.", reply: "Ich bevorzuge 'wachsam'. Aber du bist nicht der Erste, der das sagt." },
-      { label: "Motivierend.", reply: "Das wollte ich hören. Jetzt beweg dich." }
+      { label: "Beruhigend.", reply: "Das wollte ich hören. Jetzt beweg dich." },
+      { label: "Weniger beruhigend.", reply: "Ich arbeite noch an meiner Formulierung. Seit Jahren." }
     ]
   },
   {
-    text: "Ein Krieger, der rastet, rostet. Ein Krieger, der trainiert, blutet. Irgendwo dazwischen liegt das Optimum. Finde es.",
+    text: "Ein Krieger, der rastet, rostet. Ich habe das einem Schüler gesagt. Er hat zwei Wochen nicht trainiert. Er rostete. Ich hatte Recht. Es hat mir nicht gefallen.",
     options: [
-      { label: "Weiser Rat.", reply: "Ich habe viel Zeit gehabt. Vor allem in der langen Roststunde." },
-      { label: "Bluten klingt schlecht.", reply: "Metaphorisch. Meistens." }
+      { label: "Wenigstens hattest du Recht.", reply: "Ja. Es ist ein schlechter Trost." },
+      { label: "Ich werde nicht rosten.", reply: "Das sagen alle. Manche halten es sogar durch." }
     ]
   },
   {
@@ -1025,8 +1033,8 @@ const KNIGHT_DIALOGS = [
   {
     text: "Der Körper lügt. Er sagt 'genug' wenn er 'mehr' meint. Er sagt 'morgen' wenn er 'jetzt' meint. Lern seine Sprache.",
     options: [
-      { label: "Woher weißt du das?", reply: "Ich habe viele Körper beobachtet. Das ist weniger seltsam als es klingt." },
-      { label: "Mein Körper sagt gerade 'Nein'.", reply: "Übersetzung: 'Bitte.' Siehst du? Du lernst bereits." }
+      { label: "Ich höre nicht hin.", reply: "Klug. Er lügt sowieso." },
+      { label: "Mein Körper sagt 'Nein'.", reply: "Übersetzung: 'Bitte.' Du lernst bereits." }
     ]
   },
   {
@@ -1037,14 +1045,14 @@ const KNIGHT_DIALOGS = [
     ]
   },
   {
-    text: "Fortschritt ist unsichtbar — bis er es nicht mehr ist. Vertraue dem Prozess. Und dieser App. Vor allem dieser App.",
+    text: "Fortschritt ist unsichtbar — bis er es nicht mehr ist. Vertraue dem Prozess. Und dieser App. Ich tue es auch. Ungern, aber ich tue es.",
     options: [
       { label: "Du vertraust einer App?", reply: "Sie zeigt mir Zahlen. Zahlen lügen nicht. Menschen schon. Apps meistens nicht." },
       { label: "Ich vertraue dir mehr.", reply: "Das ist falsch. Aber ich nehme es als Kompliment." }
     ]
   },
   {
-    text: "Ein guter Krieger kennt seine Schwächen. Ein großer Krieger arbeitet daran. Ein legendärer Krieger hat vergessen, welche er hatte.",
+    text: "Ein guter Krieger kennt seine Schwächen. Ein großer Krieger arbeitet daran. Ich bin beides gewesen. Derzeit bin ich vor allem müde.",
     options: [
       { label: "Wo stehe ich?", reply: "Du hast die App geöffnet. Irgendwo zwischen gut und groß." },
       { label: "Ich will legendär werden.", reply: "Dann hör auf zu fragen und fang an zu trainieren." }
@@ -1059,13 +1067,29 @@ const KNIGHT_DIALOGS = [
   },
 ];
 
+const KNIGHT_MELANCHOLY = [
+  "Ich erinnere mich an einen Abend — ich muss jung gewesen sein — an dem ich dachte: so soll es immer sein. Ich weiß nicht mehr was an dem Abend war. Nur dass ich das gedacht habe. Und dass es nicht so geblieben ist.",
+  "Es gibt jemanden, den ich vermisse. Ich dachte lange, ich wäre darüber hinweg. Manche Tage glaube ich das sogar. Aber dann — wie gerade — kommt es zurück. Und ich weiß: ich werde nie darüber hinwegkommen. Morgen werde ich wieder lächeln. Das ändert nichts.",
+  "Wir hatten ein Tier. Als ich klein war. Es wurde eingeschläfert — das Wort hat mich immer gestört, als wäre es Schlaf. Mein Vater hat es im Garten begraben. Das Haus wurde abgerissen. Der Garten auch. Ich weiß nicht wo es jetzt ist. Ich wünschte, ich hätte einen Ort zum Trauern.",
+  "Ich frage mich manchmal, ob die Menschen, die ich zurückgelassen habe — ob es die richtige Entscheidung war. Ich habe nie eine Antwort gefunden. Ich habe aufgehört zu suchen. Das ist nicht dasselbe wie Frieden. Ich weiß auch nicht mehr wer gegangen ist — ich oder sie.",
+  "Ich habe nie gelernt zu zeigen was ich fühle. Mein Vater auch nicht. Sein Vater vermutlich auch nicht. Irgendwo in dieser Kette hätte jemand anders entscheiden können. Ich weiß nicht ob ich derjenige war.",
+  "Es gibt etwas in mir das sich unvollständig anfühlt. Nicht seit einem bestimmten Tag — schon immer. Ich habe lange gesucht woran es liegt. Ich suche nicht mehr. Es ist einfach da.",
+  "Ich habe letzte Nacht von jemandem geträumt dessen Gesicht ich nicht mehr kenne. Ich wusste im Traum wer es war. Beim Aufwachen war es weg. Ich habe den Rest des Morgens versucht es zurückzubekommen.",
+  "Ich habe heute Nacht geträumt. Von einem Feld, das ich kenne — oder kannte. Ich weiß nicht mehr ob ich dort wirklich war oder ob ich es nur so oft gedacht habe, dass es sich wie Erinnerung anfühlt. Beides wäre in Ordnung. Ich glaube.",
+  "Manchmal frage ich mich, wofür das alles gut ist. Nicht das Training. Das Leben. Ich finde meistens eine Antwort. Heute nicht.",
+];
+
 let knightDialogIdx = -1;
 let knightState = 'idle'; // idle | dialog | reply
 
 function getKnightDialogForToday() {
-  // Deterministic by date so it changes daily
   const today = todayStr();
   const seed = today.split('-').reduce((a,b)=>a+parseInt(b),0);
+  // ~25% chance of melancholy dialog (when seed mod 4 === 0)
+  if (seed % 4 === 0) {
+    const text = KNIGHT_MELANCHOLY[seed % KNIGHT_MELANCHOLY.length];
+    return { text, options: null };
+  }
   return KNIGHT_DIALOGS[seed % KNIGHT_DIALOGS.length];
 }
 
