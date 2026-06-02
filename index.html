@@ -650,9 +650,16 @@ function initAll(){
 }
 async function checkReady(){
   if(!gapiInited||!gisInited)return;
-  if(loadSavedToken()){gapi.client.setToken({access_token:accessToken});setSyncStatus('loading','Lade Daten...');
-    try{await loadData();updateSettingsStatus();}catch(e){clearToken();setSyncStatus('err','Session abgelaufen');updateSettingsStatus();}
-  }else{setSyncStatus('err','Nicht angemeldet');updateSettingsStatus();}
+  if(loadSavedToken()){
+    gapi.client.setToken({access_token:accessToken});
+    setSyncStatus('loading','Lade Daten...');
+    try{await loadData();updateSettingsStatus();}
+    catch(e){clearToken();setSyncStatus('loading','Anmelden...');tokenClient.requestAccessToken({prompt:''});}
+  }else{
+    // No valid token - auto trigger login silently
+    setSyncStatus('loading','Anmelden...');
+    tokenClient.requestAccessToken({prompt:''});
+  }
 }
 function signIn(){if(!tokenClient){setSyncStatus('err','API nicht bereit');return;}tokenClient.requestAccessToken({prompt:''});}
 function signOut(){if(accessToken)google.accounts.oauth2.revoke(accessToken);clearToken();gapi.client.setToken(null);setSyncStatus('err','Abgemeldet');updateSettingsStatus();}
