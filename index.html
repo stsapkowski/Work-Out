@@ -208,6 +208,10 @@ canvas.chart{width:100%!important;height:130px!important}
 .knight-chest{animation:knight-breathe 3s ease-in-out infinite}
 @keyframes knight-talk{0%,100%{d:path('M19 23 Q22 25 25 23')}50%{d:path('M19 23 Q22 21 25 23')}}
 .knight-talking .knight-mouth{animation:knight-talk .25s ease-in-out infinite}
+/* Dust effect for neglected exercises */
+.ex-chip.dusty{opacity:.6;filter:grayscale(.5)}
+.ex-chip.very-dusty{opacity:.42;filter:grayscale(.85)}
+.dust-icon{font-size:9px;opacity:.7;margin-left:2px}
 </style>
 </head>
 <body>
@@ -701,6 +705,35 @@ function daysLeft(){const d=new Date().getDay()||7;return 7-d;}
 function getWeekDates(o){const mon=new Date(wk(o));return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return localDateStr(d);});}
 function getWeekCount(name){const dates=getWeekDates(wo);return(state.logs[name]||[]).filter(l=>dates.includes(l.date)).length;}
 function getExType(name){const ex=state.pool.find(p=>p.name===name);return ex?ex.type:'sets';}
+function daysSinceLastDone(name){
+  // Returns days since the exercise was last logged, or null if never done
+  const logs=state.logs[name]||[];
+  if(logs.length===0)return null;
+  // most recent date
+  let latest=null;
+  logs.forEach(l=>{if(!latest||l.date>latest)latest=l.date;});
+  if(!latest)return null;
+  const last=new Date(latest+'T00:00:00');
+  const now=new Date();now.setHours(0,0,0,0);
+  return Math.floor((now-last)/(1000*60*60*24));
+}
+function getDustLevel(name){
+  // 0 = fresh, 1 = dusty (7-13 days), 2 = very dusty (14+ days)
+  const d=daysSinceLastDone(name);
+  if(d===null)return 0;
+  if(d>=14)return 2;
+  if(d>=7)return 1;
+  return 0;
+}
+function getOverdueExercise(){
+  // Returns {name, days} of the most overdue exercise (10+ days), or null
+  let worst=null;
+  state.pool.forEach(ex=>{
+    const d=daysSinceLastDone(ex.name);
+    if(d!==null&&d>=10){if(!worst||d>worst.days)worst={name:ex.name,days:d};}
+  });
+  return worst;
+}
 
 // ── Satz rows ────────────────────────────────────────────────
 function buildSatzRows(){
@@ -948,19 +981,24 @@ function render(){
   if(pool.length===0){document.getElementById('week-empty').style.display='';}
   else{
     document.getElementById('week-empty').style.display='none';
-    [...pool].sort((a,b)=>getWeekCount(a.name)-getWeekCount(b.name)).forEach(ex=>{
+    // Sort: overdue (dusty) first, then by week count
+    [...pool].sort((a,b)=>{
+      const da=getDustLevel(a.name),db=getDustLevel(b.name);
+      if(da!==db)return db-da; // dustier first
+      return getWeekCount(a.name)-getWeekCount(b.name);
+    }).forEach(ex=>{
       const c=getWeekCount(ex.name);const type=getExType(ex.name);
+      const dust=getDustLevel(ex.name);
       const btn=document.createElement('button');
       btn.dataset.name=ex.name;
-      if(type==='simple'){
-        btn.className='ex-chip '+(c>=2?'ex-done':c>=1?'ex-once':'ex-none');
-        btn.innerHTML=`${ex.name}<span class="ex-count">${c>=2?'2×':c>=1?'1×':'0×'}</span>`;
-        btn.onclick=()=>handleSimpleTap(ex.name,btn);
-      } else {
-        btn.className='ex-chip '+(c>=2?'ex-done':c>=1?'ex-once':'ex-none');
-        btn.innerHTML=`${ex.name}<span class="ex-count">${c>=2?'2×':c>=1?'1×':'0×'}</span>`;
-        btn.onclick=()=>openModal(ex.name);
-      }
+      let cls='ex-chip '+(c>=2?'ex-done':c>=1?'ex-once':'ex-none');
+      if(c===0&&dust===1)cls+=' dusty';
+      if(c===0&&dust===2)cls+=' very-dusty';
+      btn.className=cls;
+      const dustIcon=(c===0&&dust>=1)?`<span class="dust-icon" title="Schon länger nicht gemacht">⏳</span>`:'';
+      btn.innerHTML=`${ex.name}<span class="ex-count">${c>=2?'2×':c>=1?'1×':'0×'}</span>${dustIcon}`;
+      if(type==='simple')btn.onclick=()=>handleSimpleTap(ex.name,btn);
+      else btn.onclick=()=>openModal(ex.name);
       wchips.appendChild(btn);
     });
   }
@@ -1089,10 +1127,26 @@ const KNIGHT_MELANCHOLY = [
 let knightDialogIdx = -1;
 let knightState = 'idle'; // idle | dialog | reply
 
+const KNIGHT_OVERDUE = [
+  "Deine {ex} haben dich seit {d} Tagen nicht gesehen. Sie fragen nach dir. Ich habe ihnen nichts versprochen.",
+  "{d} Tage ohne {ex}. Ich sage es nur. Ich werte nicht. Nun ja — ein wenig.",
+  "Es gibt eine Übung, die du meidest. {ex}. Seit {d} Tagen. Wir wissen beide warum. Wir sprechen nicht darüber.",
+  "Ich habe deine {ex} im Trainingslager gefunden. Allein. Im Dunkeln. Es ist {d} Tage her. Geh zu ihnen.",
+  "Ein Krieger vernachlässigt keine Disziplin. Du hast {ex} seit {d} Tagen nicht berührt. Ich vernachlässige das Urteil. Diesmal.",
+  "{ex}. {d} Tage. Das Schwert, das du nicht führst, rostet trotzdem.",
+];
+
 function getKnightDialogForToday() {
   const today = todayStr();
   const seed = today.split('-').reduce((a,b)=>a+parseInt(b),0);
-  // ~25% chance of melancholy dialog (when seed mod 4 === 0)
+  // Check for overdue exercise - ~50% chance to mention it if one exists
+  const overdue = getOverdueExercise();
+  if (overdue && seed % 2 === 0) {
+    const tmpl = KNIGHT_OVERDUE[seed % KNIGHT_OVERDUE.length];
+    const text = tmpl.replace('{ex}', overdue.name).replace('{d}', overdue.days);
+    return { text, options: null };
+  }
+  // ~25% chance of melancholy dialog
   if (seed % 4 === 0) {
     const text = KNIGHT_MELANCHOLY[seed % KNIGHT_MELANCHOLY.length];
     return { text, options: null };
