@@ -212,6 +212,8 @@ canvas.chart{width:100%!important;height:130px!important}
 .ex-chip.dusty{opacity:.6;filter:grayscale(.5)}
 .ex-chip.very-dusty{opacity:.42;filter:grayscale(.85)}
 .dust-icon{font-size:9px;opacity:.7;margin-left:2px}
+.satz-step{background:none;border:.5px solid var(--b2,#252d40);color:var(--gold,#b8922a);font-family:'Cinzel',serif;font-size:18px;width:34px;height:34px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.satz-step:hover{border-color:var(--gold,#b8922a);background:var(--gd,#2e1e05)}
 </style>
 </head>
 <body>
@@ -398,7 +400,14 @@ canvas.chart{width:100%!important;height:130px!important}
       </div>
       <div id="fields-sets">
         <div class="field-row c1" style="margin-bottom:12px">
-          <div class="field-group"><span class="field-label">Anzahl Sätze</span><input class="field-input" type="number" id="f-s-count" placeholder="z.B. 3" min="1" max="10" oninput="buildSatzRows()"></div>
+          <div class="field-group">
+            <span class="field-label">Anzahl Sätze</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="satz-step" onclick="stepSatz(-1)">−</button>
+              <input class="field-input" type="number" id="f-s-count" value="1" min="1" max="10" style="width:60px;text-align:center" oninput="buildSatzRows()">
+              <button type="button" class="satz-step" onclick="stepSatz(1)">+</button>
+            </div>
+          </div>
         </div>
         <div id="satz-rows"></div>
         <div style="margin-top:4px;font-size:12px;font-style:italic;color:var(--dim)" id="satz-hint"></div>
@@ -736,6 +745,13 @@ function getOverdueExercise(){
 }
 
 // ── Satz rows ────────────────────────────────────────────────
+function stepSatz(delta){
+  const inp=document.getElementById('f-s-count');
+  let v=parseInt(inp.value)||1;
+  v=Math.max(1,Math.min(10,v+delta));
+  inp.value=v;
+  buildSatzRows();
+}
 function buildSatzRows(){
   const count=parseInt(document.getElementById('f-s-count').value)||0;
   const container=document.getElementById('satz-rows');
@@ -780,9 +796,10 @@ function openModal(name){
   document.getElementById('fields-sets').style.display=type==='sets'?'':'none';
   document.getElementById('fields-rp').style.display=type==='restpause'?'':'none';
   document.getElementById('f-date').value=todayStr();
-  document.getElementById('f-s-count').value='';
+  document.getElementById('f-s-count').value='1';
   document.getElementById('satz-rows').innerHTML='';
   document.getElementById('satz-hint').textContent='';
+  if(type==='sets')setTimeout(()=>buildSatzRows(),0);
   ['f-r-first','f-r-weight','f-r-rp','f-r-sets','f-r-note'].forEach(id=>document.getElementById(id).value='');
   if(type==='restpause'){const logs=state.logs[name]||[];if(logs.length>0&&logs[logs.length-1].weight)document.getElementById('f-r-weight').value=logs[logs.length-1].weight;}
   renderLogList(name);renderChart(name);
